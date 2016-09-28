@@ -8,17 +8,19 @@ import {match, RoutingContext} from 'react-router';
 
 import baseManager from './base-manager';
 
+import analytics from '../analytics/analytics'
+
 const routeManager = Object.assign({}, baseManager, {
     configureDevelopmentEnv(app) {
         const apiRouter = this.createApiRouter();
         const pagesRouter = this.createPageRouter();
-        app.use('/api', apiRouter);            
-        app.use('/', pagesRouter);            
+        app.use('/api', apiRouter);
+        app.use('/', pagesRouter);
     },
 
     createPageRouter() {
         const router = express.Router();
-        
+
         router.get('*', (req, res) => {
             res.render('index');
         });
@@ -31,8 +33,28 @@ const routeManager = Object.assign({}, baseManager, {
 
         router.get('/latest-bills', (req, res) => {
             this.retrieveLatestBills((err, content) => {
-                if(!err) {
-                    res.json(JSON.parse(content));                                    
+                if (!err) {
+                    res.json(JSON.parse(content));
+                } else {
+                    res.status(500).send();
+                }
+            });
+        });
+
+        router.get('/analytics/top-words', (req, res) => {
+            analytics.topWords((err, json) => {
+                if (!err) {
+                    res.json(json);
+                } else {
+                    res.status(500).send();
+                }
+            });
+        });
+
+        router.get('/analytics/message-count', (req, res) => {
+            analytics.messageCount((err, json) => {
+                if (!err) {
+                    res.json(json);
                 } else {
                     res.status(500).send();
                 }
