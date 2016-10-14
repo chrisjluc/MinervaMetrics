@@ -2,8 +2,8 @@ express = require 'express'
 webpack = require 'webpack'
 webpackDevMiddleware = require 'webpack-dev-middleware'
 
-apiRoutes = require './api_router'
-mainRoutes = require './main_router'
+apiRoutes = require './routers/api_router'
+mainRoutes = require './routers/main_router'
 
 app = express!
   ..set 'view engine', 'pug'
