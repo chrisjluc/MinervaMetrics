@@ -1,9 +1,9 @@
 require! express
 
-apiRouter = express.Router();
+apiRouter = express.Router!
 
 apiRouter.get '/analytics', (req, res) ->
   res.status 200
-    ..json {analytics: 'works!'};
+    ..json analytics: 'works!'
 
-module.exports = apiRouter;
+module.exports = apiRouter
