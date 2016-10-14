@@ -2,14 +2,13 @@ express = require 'express'
 webpack = require 'webpack'
 webpackDevMiddleware = require 'webpack-dev-middleware'
 
+apiRoutes = require './api_router'
+mainRoutes = require './main_router'
 
 app = express!
-app.listen 8000
-
-app.use webpackDevMiddleware webpack require './webpack-config.ls'
-
-app.get '/*', (req, res) ->
-  res.render 'main'
-
-app.set 'view engine', 'pug'
-app.set 'views', __dirname
+  ..set 'view engine', 'pug'
+  ..set 'views', __dirname
+  ..use '/', mainRoutes
+  ..use '/api', apiRoutes
+  ..use webpackDevMiddleware webpack require './webpack-config.ls'
+  ..listen 8000
