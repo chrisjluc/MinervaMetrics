@@ -1,7 +1,7 @@
 require './index.styl'
 react = require 'react'
 browserHistory = require 'react-router/lib/browserHistory'
-{button, div} = react.DOM
+{button, div, p} = react.DOM
 
 
 class HomePage extends react.Component
@@ -9,10 +9,11 @@ class HomePage extends react.Component
   render: ->
     div className: 'c-home-page',
       div className: 'description',
-        '''
-        Description of our product
-        '''
-      button {}, 'Log in with Facebook'
+        p {},
+          '''
+          Description of our product
+          '''
+      button {onClick: -> browserHistory.push '/messages'}, 'Log in with Facebook'
 
 
 module.exports = HomePage

@@ -5,6 +5,7 @@ Redirect = react.createFactory require 'react-router/lib/Redirect'
 browserHistory = require 'react-router/lib/browserHistory'
 Layout = require '../layout'
 HomePage = require '../home_page'
+Messages = require '../messages'
 
 
 class Root extends react.Component
@@ -14,6 +15,7 @@ class Root extends react.Component
       Redirect from: '/', to: '/welcome'
       Route path: '/', component: Layout,
         Route path: '/welcome', component: HomePage
+        Route path: '/messages', component: Messages
 
 
 module.exports = Root
