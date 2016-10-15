@@ -1,7 +1,7 @@
 {
-  "name": "imnd2",
+  "name": "minerva-metrics",
   "version": "1.0.0",
-  "description": "Personal website",
+  "description": "Conversation Analytics",
   "main": "index.ls",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andysctu/iMND2.git"
+    "url": "git+https://github.com/chrisjluc/MinervaMetrics"
   },
   "author": "Andy Tu",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/andysctu/iMND2/issues"
+    "url": "https://github.com/chrisjluc/MinervaMetrics/issues"
   },
-  "homepage": "https://github.com/andysctu/iMND2#readme",
+  "homepage": "https://github.com/chrisjluc/MinervaMetrics",
   "devDependencies": {
     "css-loader": "^0.23.1",
     "express": "^4.14.0",
