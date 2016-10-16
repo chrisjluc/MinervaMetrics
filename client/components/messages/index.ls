@@ -42,50 +42,62 @@ class Messages extends react.Component
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
     {
       recipient: 'Alice'
       summary: 'Hi Alice how are you doing...'
+      time: '9:00pm'
     }
   ]
 
