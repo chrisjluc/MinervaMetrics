@@ -5,7 +5,8 @@
   "main": "index.ls",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "lsc index.ls"
+    "start": "lsc index.ls",
+    "db": "psql -f database_scripts/db_setup.sql"
   },
   "repository": {
     "type": "git",
