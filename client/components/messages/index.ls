@@ -14,11 +14,10 @@ class Messages extends react.Component
       selectedConvo: -1
       metrics: {}
 
-  # getMetrics: ->
-  #   @setState mostFrequentWords:
 
   selectConvo: (i) ~>
     @setState selectedConvo: i 
+    
 
   analyze: (i) ~>
     metrics = @state.metrics
