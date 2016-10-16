@@ -1,19 +1,35 @@
 $messages-tab-width = 400px
 
 .c-messages
+  font-weight: 200
+  
+  .search
+    height: 40px
+    border-bottom: 1px solid #b2b2b2
+    text-align: center
+    
+    input
+      background-color: #f6f7f9
+      border-radius: 3px
+      border-style: none
+      font-size: 14px
+      height: 24px
+      line-height: 24px
+      padding: 0 28px
+      outline: none
+      margin-top: 8px
+      width: $messages-tab-width - 100px
+      box-sizing: border-box
+      text-align: center
+      
+      &:focus::-webkit-input-placeholder
+        color: transparent
+    
   .messages-tab
     width: $messages-tab-width
     border-right: 1px solid #b2b2b2
     display: inline-block
     box-sizing: border-box
-    
-    .message
-      border-bottom: 1px solid #b2b2b2
-      height: 100px
-      padding: 20px
-      
-      &:hover
-        cursor: pointer
   
   .analytics-pane
     display: inline-block
