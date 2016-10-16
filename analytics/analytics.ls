@@ -41,32 +41,31 @@ topWords = (conversationId) ->
 
 hour = 1000 * 60 * 60
 day = hour * 24
+day_key = 'by_day'
+hour_key = 'by_hour'
 
 countMessages = (conversationId) ->
   messages = messageDAO.getMessages conversationId
-  messageCounts = {}
+  messageCounts = new Map!
 
   for message in messages
     senderId = message.sender_id
-    if !messageCounts.hasOwnProperty senderId
-      messageCounts[senderId] =
-        by_day: {}
-        by_hour: {}
+    if !messageCounts.get senderId
+      messageCounts.set senderId, new Map [[day_key, new Map!] [hour_key, new Map!]]
     timestamp_by_hour = hour * parseInt message.timestamp / hour
     timestamp_by_day = day * parseInt message.timestamp / day
-    if !messageCounts[senderId]['by_day'].hasOwnProperty timestamp_by_day
-      messageCounts[senderId]['by_day'][timestamp_by_day] = 0
-    if !messageCounts[senderId]['by_hour'].hasOwnProperty timestamp_by_hour
-      messageCounts[senderId]['by_hour'][timestamp_by_hour] = 0
+    senderCounts = messageCounts.get senderId
 
-    messageCounts[senderId]['by_day'][timestamp_by_day]++
-    messageCounts[senderId]['by_hour'][timestamp_by_hour]++
+    day_count = senderCounts.get day_key .get timestamp_by_day
+    senderCounts.get day_key .set timestamp_by_day, (day_count || 0) + 1
+    hour_count = senderCounts.get hour_key .get timestamp_by_hour
+    senderCounts.get hour_key .set timestamp_by_hour, (hour_count || 0) + 1
 
-  Object.keys messageCounts .forEach (senderId) ->
-    Object.keys messageCounts[senderId]['by_day'] .forEach (day) ->
-      console.log messageCounts[senderId]['by_day'][day]
-    Object.keys messageCounts[senderId]['by_hour'] .forEach (hour) ->
-      console.log messageCounts[senderId]['by_hour'][hour]
+  messageCounts.forEach (map, senderId) ->
+    map.get day_key .forEach (count, day) ->
+      console.log count
+    map.get hour_key .forEach (count, day) ->
+      console.log count
 
 module.exports =
   topWords: topWords
