@@ -26,6 +26,7 @@ getTopWordsMetric = (conversationId, senderId, callback) ->
     if senderId
       query = query.concat ' AND sender_id=$2'
       values.push senderId
+    query = query.concat ' ORDER BY count DESC LIMIT 100'
 
     client.query(
       query,
