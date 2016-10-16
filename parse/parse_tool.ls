@@ -1,7 +1,6 @@
-require! livescript
 require! https
 
-args = process.argv.slice 2;
+args = process.argv.slice 2
 convoID = args[0]
 access_token = args[1]
 
@@ -19,14 +18,14 @@ getTestPersonaLoginCredentials = (callback, options) ->
 
     https.get options, (response) ->
         body = ''
-        response.on 'data' d -> 
+        response.on 'data', (d) -> 
             body += d
-        response.on 'end' ->
+        response.on 'end', ->
             parsed = JSON.parse body
             if parsed.error
                 console.log parsed.error
             else
-                callback(parsed);
+                callback parsed
             
         
 
@@ -45,7 +44,8 @@ callback_fn = (parsed) ->
     console.log convo.length
     options = parsed.comments.paging.next
 
-for i in 1 to 10 by 1
-    getTestPersonaLoginCredentials callback_fn options
+
+for i from 1 to 10
+  getTestPersonaLoginCredentials callback_fn, options
 
 
