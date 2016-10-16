@@ -4,24 +4,21 @@ metricsDAO = require '../daos/metrics_dao'
 textSanitizer = require './text_sanitizer'
 
 countWords = (conversationId) ->
-  messages = messageDAO.getMessages conversationId
-  senders = {}
+  messageDAO.getMessages conversationId, (err, messages) ->
+    wordCounts = new Map!
+    for message in messages
+      senderId = message.sender_id
+      if !wordCounts.get senderId
+        wordCounts.set senderId, new Map!
+      text = message.text .toLowerCase!
+      words = textSanitizer.removeStopWords textSanitizer.removePunctuation text .split ' '
+      for word in words
+        wordCount = wordCounts.get senderId .get word
+        wordCounts.get senderId .set word, (wordCount || 0) + 1
 
-  for message in messages
-    senderId = message.sender_id
-    if !senders.hasOwnProperty senderId
-      senders[senderId] = {}
-    words = textSanitizer.removePunctuation message.text .toLowerCase!.split ' '
-    for word in words
-      if !senders[senderId].hasOwnProperty word
-        senders[senderId][word] = 0
-      senders[senderId][word]++
-
-  Object.keys senders .forEach (senderId) ->
-    Object.keys senders[senderId] .forEach (word) ->
-      count = senders[senderId][word]
-      metricsDAO.saveWordCountMetric conversationId, senderId, word, count
-
+    wordCounts.forEach (words, senderId) ->
+      words.forEach (count, word) ->
+        metricsDAO.saveWordCountMetric conversationId, senderId, word, count
 
 hour = 1000 * 60 * 60
 day = hour * 24
