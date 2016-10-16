@@ -3,6 +3,7 @@ react = require 'react'
 browserHistory = require 'react-router/lib/browserHistory'
 {button, div, input} = react.DOM
 MostFrequentWords = react.createFactory require '../metrics/most_frequent_words'
+MessageFrequency = react.createFactory require '../metrics/message_frequency'
 Conversation = react.createFactory require './conversation'
 request = require 'request'
 
@@ -56,7 +57,9 @@ class Conversations extends react.Component
           button className: 'analyze-button', onClick: (~> @analyze @state.selectedConvo),
             'Analyze!'
         else
-          MostFrequentWords mostFrequentWords: @state.metrics[@state.selectedConvo].mostFrequentWords
+          div {},
+            MostFrequentWords mostFrequentWords: @state.metrics[@state.selectedConvo].mostFrequentWords
+            MessageFrequency {}
 
   testMsgs = [
     {
