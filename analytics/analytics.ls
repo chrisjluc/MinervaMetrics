@@ -39,5 +39,34 @@ topWords = (conversationId) ->
         break
 
 
+hour = 1000 * 60 * 60
+day = hour * 24
+
+countMessages = (conversationId) ->
+  messages = messageDAO.getMessages conversationId
+  messageCounts = {}
+
+  for message in messages
+    senderId = message.sender_id
+    if !messageCounts.hasOwnProperty senderId
+      messageCounts[senderId] =
+        by_day: {}
+        by_hour: {}
+    timestamp_by_hour = hour * parseInt message.timestamp / hour
+    timestamp_by_day = day * parseInt message.timestamp / day
+    if !messageCounts[senderId]['by_day'].hasOwnProperty timestamp_by_day
+      messageCounts[senderId]['by_day'][timestamp_by_day] = 0
+    if !messageCounts[senderId]['by_hour'].hasOwnProperty timestamp_by_hour
+      messageCounts[senderId]['by_hour'][timestamp_by_hour] = 0
+
+    messageCounts[senderId]['by_day'][timestamp_by_day]++
+    messageCounts[senderId]['by_hour'][timestamp_by_hour]++
+
+  Object.keys messageCounts .forEach (senderId) ->
+    Object.keys messageCounts[senderId]['by_day'] .forEach (day) ->
+      console.log messageCounts[senderId]['by_day'][day]
+    Object.keys messageCounts[senderId]['by_hour'] .forEach (hour) ->
+      console.log messageCounts[senderId]['by_hour'][hour]
+
 module.exports =
   topWords: topWords
