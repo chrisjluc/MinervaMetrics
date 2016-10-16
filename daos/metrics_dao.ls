@@ -1,4 +1,4 @@
-saveTopWordsMetric = (conversationId, senderId, word, count) ->
+saveWordCountMetric = (conversationId, senderId, word, count) ->
   console.log 'save metric to db'
 
 getTopWordsMetric = (conversationId, senderId) ->
@@ -6,5 +6,5 @@ getTopWordsMetric = (conversationId, senderId) ->
   []
 
 module.exports =
-  saveTopWordsMetric: saveTopWordsMetric
+  saveWordCountMetric: saveWordCountMetric
   getTopWordsMetric: getTopWordsMetric
