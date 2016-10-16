@@ -18,5 +18,31 @@ getMessages = (conversationId, callback) ->
     return
   return
 
-module.exports =
+postMessages = (req, res, next) ->
+  data = {
+    (req.body)conversation_id
+    (req.body)sender_id
+    (req.body)text
+    (req.body)timestamp
+  }
+  pg.connect connectionString, (err, client, done) ->
+    if err
+      done!
+      console.log err
+      return (res.status 500).json success: false
+    query = client.query 'INSERT INTO messages(conversation_id, sender_id, text, timestamp) values($1, $2, $3, $4)', [
+      data.conversation_id
+      data.sender_id
+      data.text
+      data.timestamp
+    ]
+    query.on 'end', ->
+      done!
+      (res.status 200).json success: true
+    return
+  return
+
+module.exports = {
   getMessages: getMessages
+  postMessages: postMessages
+}
