@@ -14,8 +14,6 @@ apiRouter.get '/analytics/top-words', (req, res) ->
     res.status 200
       ..json result
 
-apiRouter.post '/messages/', messageDAO.postMessages
-
 apiRouter.get '/messages/', (req, res) ->
   messageDAO.getMessages req.query.conversation_id, (err, result) ->
     if err
