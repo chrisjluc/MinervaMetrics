@@ -28,7 +28,7 @@ stopWords = new Set ['a' 'about' 'above' 'across' 'after' 'afterwards' 'again' '
 'your' 'yours' 'yourself' 'yourselves' 'the']
 
 removeStopWords = (text) ->
-  # Assumes punctucation has been removed
+  # Assumes punctuation has been removed
   # and the text has been lowercased
   words = text.split ' '
   nonStopWords = [word for let word in words when !stopWords.has word]
