@@ -1,12 +1,13 @@
 var https = require('https');
 
-// var args = process.argv.slice(2);
-// console.log('Hello ' + args.join(' ') + '!');
+var args = process.argv.slice(2);
 
-var convoID = 785605924898632
-var access_token = "EAACEdEose0cBANFyRhIsy3I38bK0TPOT59zulBcDmXm9s8ukqcm1Ww6ZCk7IcEuj2REZC0GT0oQGz4kxKtMtvDEKKxKyn5F9D84pkJVXhPXRY4yaVNoxs4ZAKzkaZCudMtVEIo0QvkT6LeyekggOtOpvwq8ZBhcPXP1TYXqadQQZDZD"
 
-var p = '/v2.1/' + convoID + '?fields=to%2Ccomments.limit(1000)&access_token=' + access_token
+
+var convoID = args[0]
+var access_token = args[1]
+
+var p = '/v2.3/' + convoID + '?fields=to%2Ccomments.limit(1000)&access_token=' + access_token
 
 var o = {
   host: 'graph.facebook.com',
@@ -16,8 +17,6 @@ var o = {
 
 var convo = []
 var threads_parsed = 0
-var participant1
-var participant2
 
 function getTestPersonaLoginCredentials(callback, options) {
 
@@ -30,11 +29,13 @@ function getTestPersonaLoginCredentials(callback, options) {
         response.on('end', function() {
             // Data reception is done, do whatever with it!
             var parsed = JSON.parse(body);
-            if (!participant1 && !participant2){
-            	participant1 = parsed.to.data[0].id
-            	participant2 = parsed.to.data[1].id
+            if (parsed.error){
+                console.log(parsed.error)
+                return
             }
+
             callback(parsed);
+            
         });
     })
     .on('error', (e) => {
@@ -44,15 +45,13 @@ function getTestPersonaLoginCredentials(callback, options) {
 
 function callback_fn(parsed) {
 	console.log("============================")
-	console.log(parsed.comments.data.length)
 
 	for (var i = 0; i<parsed.comments.data.length; i++){
 		var sender = parsed.comments.data[i].from.id
-		var receiver = sender == participant1 ? participant2 : participant1
 
 		m = {
 			"sender_id": sender,
-			"receiver_id": receiver,
+			"thread_id": convoID,
 			"text": parsed.comments.data[i].message,
 			"timestamp": parsed.comments.data[i].created_time
 		}
@@ -63,7 +62,7 @@ function callback_fn(parsed) {
 	console.log(convo.length)
 }
 
-for (var j = 0; j < 10; j++ ){
+for (threads_parsed = 0; threads_parsed < 10; threads_parsed++ ){
 	getTestPersonaLoginCredentials(callback_fn,o);
 }
 
