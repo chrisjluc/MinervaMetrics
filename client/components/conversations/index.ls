@@ -4,6 +4,7 @@ browserHistory = require 'react-router/lib/browserHistory'
 {button, div, input} = react.DOM
 MostFrequentWords = react.createFactory require '../metrics/most_frequent_words'
 Conversation = react.createFactory require './conversation'
+request = require 'request'
 
 
 class Conversations extends react.Component
@@ -15,20 +16,25 @@ class Conversations extends react.Component
       metrics: {}
 
 
+  getTopWords: (i) ~>
+    options =
+      url: "http://127.0.0.1:8000/api/analytics/top-words?conversation_id=#{i}"
+      withCredentials: false
+    request options, (err, resp, body) ~>
+      metrics = @state.metrics
+      console.log body
+      metrics[i] = 
+        mostFrequentWords: JSON.parse body
+        
+      @setState metrics: metrics
+
+
   selectConvo: (i) ~>
     @setState selectedConvo: i 
-    
+
 
   analyze: (i) ~>
-    metrics = @state.metrics
-    metrics[i] =
-      mostFrequentWords:
-        * word: 'hello'
-          count: 10
-        * word: 'world'
-          count: 5
-      # otherMetric: {}
-    @setState metrics: metrics
+    @getTopWords i
 
 
   render: ->

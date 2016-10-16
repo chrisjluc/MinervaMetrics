@@ -18,7 +18,6 @@ class MostFrequentWords extends react.Component
             * label: 'Word Count'
               data: @props.mostFrequentWords.map (wordInfo) -> wordInfo.count
           ]
-                
       }
 
 
