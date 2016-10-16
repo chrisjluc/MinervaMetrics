@@ -1,12 +1,12 @@
 require! https
 
 args = process.argv.slice 2
-convoID = args[0]
-access_token = args[1]
+convoID = 211777115666079
+access_token = args[0]
 
-p = '/v2.3/' + convoID + '?fields=to%2Ccomments.limit(1000)&access_token=' + access_token
+i = 0
 
-console.log(p)
+p = '/v2.3/' + convoID + '/comments?limit=1000&access_token=' + access_token
 
 options = 
   host: 'graph.facebook.com'
@@ -14,7 +14,7 @@ options =
   method: 'GET'
 
 convo = []
-threads_parsed = 0
+err = false
 
 getTestPersonaLoginCredentials = (callback, options) ->
   https.get options, (response) ->
@@ -25,28 +25,48 @@ getTestPersonaLoginCredentials = (callback, options) ->
       parsed = JSON.parse body
       if parsed.error
           console.log parsed.error
+          err = true
       else
         callback parsed
             
         
+insertMessageToDatabase = (array) ->
+  for message in array
+    o = 
+      host: 'localhost:8000'
+      path: '/api/messages/'
+      method: 'POST'
+      data: message
 
+    https.request o (res) ->
+      res.setEncoding 'utf8'
+      res.on 'data', (chunk) ->
+          console.log 'Response: ' + chunk 
 
 callback_fn = (parsed) ->
-  for comment in parsed.comments.data
+  console.log(parsed.data.length)
+
+  if parsed.data.length == 0 or i > 2
+    err = true
+    console.log("end")
+    insertMessageToDatabase convo
+    return
+
+  for comment in parsed.data
     sender = comment.from.id
     message = 
-      sender_id: sender
-      thread_id: convoID
+      message_id = comment.id
       text: comment.message
+      sender_id: sender
+      conversation_id: convoID
       timestamp: comment.created_time
 
     convo.push message
 
   console.log convo.length
-  options = parsed.comments.paging.next
+  console.log convo[convo.length - 1]
+  getTestPersonaLoginCredentials callback_fn, parsed.paging.next
 
-
-for i from 1 to 10
-  getTestPersonaLoginCredentials callback_fn, options
+getTestPersonaLoginCredentials callback_fn, options
 
 
