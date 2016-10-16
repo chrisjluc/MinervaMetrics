@@ -18,28 +18,28 @@ getMessages = (conversationId, callback) ->
     )
 
 postMessages = (req, res, next) ->
-  data = {
+  data = [
+    (req.body)message_id
     (req.body)conversation_id
     (req.body)sender_id
     (req.body)text
     (req.body)timestamp
-  }
+  ]
   pool.acquireClient (err, client, done) ->
     if err
       done!
       console.err err
       return res.status 500 .json success: false
-    query = client.query 'INSERT INTO message(conversation_id, sender_id, text, timestamp) values($1, $2, $3, $4)', [
-      data.conversation_id
-      data.sender_id
-      data.text
-      data.timestamp
-    ], (err, result) ->
-      done!
-      if err
-        console.err err
-        return res.status 500 .json success: false
-      res.status 200 .json success: true
+    query = client.query(
+      'INSERT INTO message(message_id, conversation_id, sender_id, text, timestamp) values($1, $2, $3, $4, $5)',
+      data,
+      (err, result) ->
+        done!
+        if err
+          console.err err
+          return res.status 500 .json success: false
+        res.status 200 .json success: true
+    )
 
 module.exports =
   getMessages: getMessages
