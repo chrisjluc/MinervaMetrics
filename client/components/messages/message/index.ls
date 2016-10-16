@@ -12,5 +12,4 @@ class Message extends react.Component
         div className: 'summary', @props.message.summary
 
 
-
 module.exports = Message
