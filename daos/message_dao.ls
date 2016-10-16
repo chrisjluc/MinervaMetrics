@@ -8,7 +8,7 @@ getMessages = (conversationId, callback) ->
       console.log err
       return callback err null
     client.query(
-      'SELECT text, sender_id, timestamp FROM messages WHERE conversation_id = $1',
+      'SELECT text, sender_id, timestamp FROM message WHERE conversation_id = $1',
       [conversationId],
       (err, result) ->
         done!
@@ -29,7 +29,7 @@ postMessages = (req, res, next) ->
       done!
       console.err err
       return res.status 500 .json success: false
-    query = client.query 'INSERT INTO messages(conversation_id, sender_id, text, timestamp) values($1, $2, $3, $4)', [
+    query = client.query 'INSERT INTO message(conversation_id, sender_id, text, timestamp) values($1, $2, $3, $4)', [
       data.conversation_id
       data.sender_id
       data.text
