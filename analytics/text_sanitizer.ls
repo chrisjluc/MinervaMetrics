@@ -36,3 +36,4 @@ removeStopWords = (text) ->
 
 module.exports =
   removePunctuation: removePunctuation
+  removeStopWords: removeStopWords

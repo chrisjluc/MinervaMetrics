@@ -7,7 +7,7 @@ saveWordCountMetric = (conversationId, senderId, word, count) ->
       console.log err
     client.query(
       'INSERT INTO wordcount VALUES ($1, $2, $3, $4)',
-      [conversationId senderId word count],
+      [conversationId, senderId, word, count],
       (err, result) ->
         done!
         if err
