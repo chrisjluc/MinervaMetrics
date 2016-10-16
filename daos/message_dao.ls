@@ -1,9 +1,8 @@
-pg = require 'pg'
-connectionString = process.env.DATABASE_URL or 'postgres://localhost:5432/minerva'
+pool = require '../database/pool.ls'
 
 getMessages = (conversationId, callback) ->
   results = []
-  pg.connect connectionString, (err, client, done) ->
+  pool.acquireClient (err, client, done) ->
     if err
       done!
       console.log err
@@ -25,7 +24,7 @@ postMessages = (req, res, next) ->
     (req.body)text
     (req.body)timestamp
   }
-  pg.connect connectionString, (err, client, done) ->
+  pool.acquireClient (err, client, done) ->
     if err
       done!
       console.log err
@@ -42,7 +41,6 @@ postMessages = (req, res, next) ->
     return
   return
 
-module.exports = {
+module.exports =
   getMessages: getMessages
   postMessages: postMessages
-}
