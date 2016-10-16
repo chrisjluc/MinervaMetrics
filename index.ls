@@ -11,7 +11,7 @@ app = express!
   ..set 'views', __dirname
   ..use bodyParser.json!
   ..use bodyParser.urlencoded extended: true
-  ..use '/', mainRoutes
-  ..use '/api', apiRoutes
   ..use webpackDevMiddleware webpack require './webpack-config.ls'
+  ..use '/api', apiRoutes
+  ..use '/', mainRoutes
   ..listen 8000

@@ -1,14 +1,16 @@
 require! express
 messageDAO = require '../daos/message_dao'
+metricsDAO = require '../daos/metrics_dao'
 
 server = require '../server/server'
 apiRouter = express.Router!
-analytics = require '../analytics/analytics'
 
-apiRouter.get '/analytics', (req, res) ->
-  analytics.topWords 1
+apiRouter.get '/analytics/top-words', (req, res) ->
+  conversationId = req.query.conversationId
+  senderId = req.query.senderId
+  messages = metricsDAO.getTopWordsMetric(conversationId, senderId)
   res.status 200
-    ..json analytics: 'works!'
+    ..json messages
 
 apiRouter.post '/messages', server.postMessages
 
