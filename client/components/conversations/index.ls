@@ -3,14 +3,14 @@ react = require 'react'
 browserHistory = require 'react-router/lib/browserHistory'
 {button, div, input} = react.DOM
 MostFrequentWords = react.createFactory require '../metrics/most_frequent_words'
-Message = react.createFactory require './message'
+Conversation = react.createFactory require './conversation'
 
 
-class Messages extends react.Component
+class Conversations extends react.Component
   
   ->
     @state = 
-      messages: testMsgs
+      conversations: testMsgs
       selectedConvo: -1
       metrics: {}
 
@@ -32,14 +32,14 @@ class Messages extends react.Component
 
 
   render: ->
-    div className: 'c-messages',
-      div className: 'messages-tab',
+    div className: 'c-conversations',
+      div className: 'conversations-tab',
         div className: 'search',
           input placeholder: 'Search for conversations'
-        @state.messages.map (message, i) ~>
-          Message {
+        @state.conversations.map (conversation, i) ~>
+          Conversation {
             key: i
-            message: message
+            conversation: conversation
             onClick: ~> @selectConvo i
           }
 
@@ -116,4 +116,4 @@ class Messages extends react.Component
   ]
 
 
-module.exports = Messages
+module.exports = Conversations

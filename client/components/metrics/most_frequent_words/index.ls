@@ -1,8 +1,8 @@
 require './index.styl'
 react = require 'react'
 browserHistory = require 'react-router/lib/browserHistory'
-# Metric = require './'
-{div, table, tbody, td, tr} = react.DOM
+BarChart = react.createFactory (require 'react-chartjs' .Bar)
+{div} = react.DOM
 
 
 class MostFrequentWords extends react.Component
@@ -10,14 +10,16 @@ class MostFrequentWords extends react.Component
   render: ~>
     div className: 'c-most-freq-words',
       div className: 'metric-title', 'Most Frequent Words'
-      table className: 'words-table',
-        console.log JSON.stringify @props.mostFrequentWords
-        @props.mostFrequentWords.map (wordInfo, i) ->
-          tbody key: i,
-            tr {},
-              td {}, wordInfo.word
-              td {}, wordInfo.count
-
+      BarChart {
+        className: 'bar-chart'
+        data:
+          labels: @props.mostFrequentWords.map (wordInfo) -> wordInfo.word
+          datasets: [
+            * label: 'Word Count'
+              data: @props.mostFrequentWords.map (wordInfo) -> wordInfo.count
+          ]
+                
+      }
 
 
 module.exports = MostFrequentWords

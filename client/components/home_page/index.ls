@@ -11,9 +11,9 @@ class HomePage extends react.Component
       div className: 'description',
         p {},
           '''
-          Description of our product
+          Analyze your Facebook messages
           '''
-      button {onClick: -> browserHistory.push '/messages'}, 'Log in with Facebook'
+      button {onClick: -> browserHistory.push '/conversations'}, 'Log in with Facebook'
 
 
 module.exports = HomePage
