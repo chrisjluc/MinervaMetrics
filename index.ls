@@ -8,7 +8,7 @@ mainRoutes = require './routers/main_router'
 app = express!
   ..set 'view engine', 'pug'
   ..set 'views', __dirname
-  ..use '/', mainRoutes
-  ..use '/api', apiRoutes
   ..use webpackDevMiddleware webpack require './webpack-config.ls'
+  ..use '/api', apiRoutes
+  ..use '/', mainRoutes
   ..listen 8000
