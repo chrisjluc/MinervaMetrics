@@ -38,8 +38,8 @@
     "cors": "^2.8.1",
     "json-loader": "^0.5.4",
     "pg": "^6.1.0",
-    "react-chartjs": "^0.8.0",
     "react-chartjs-2": "^1.4.0",
+    "react-facebook-login-component": "^0.6.0",
     "request": "^2.75.0"
   }
 }
