@@ -1,5 +1,6 @@
 express = require 'express'
 webpack = require 'webpack'
+bodyParser = require 'body-parser'
 webpackDevMiddleware = require 'webpack-dev-middleware'
 
 apiRoutes = require './routers/api_router'
@@ -8,7 +9,9 @@ mainRoutes = require './routers/main_router'
 app = express!
   ..set 'view engine', 'pug'
   ..set 'views', __dirname
-  ..use '/', mainRoutes
-  ..use '/api', apiRoutes
+  ..use bodyParser.json!
+  ..use bodyParser.urlencoded extended: true
   ..use webpackDevMiddleware webpack require './webpack-config.ls'
+  ..use '/api', apiRoutes
+  ..use '/', mainRoutes
   ..listen 8000

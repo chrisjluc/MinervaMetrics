@@ -1,21 +1,48 @@
-getMessages = (conversationId) ->
-  [
-  * text: 'hello hello hello how how are you?'
-    sender_id: 2
-    timestamp: Date.now() - 1
-  * text: 'hello, i\'m good your self?'
-    sender_id: 2
-    timestamp: Date.now() - 6000000
-  * text: 'Hello hello Yeah, I\m fine as well! I can not believe he is "good"'
-    sender_id: 1
-    timestamp: Date.now()
-  * text: 'Hello hello Yeah, I\m fine as well! I can not believe he is "good"'
-    sender_id: 1
-    timestamp: Date.now() - 50000000
-  * text: 'Hello hello Yeah, I\m fine as well! I can not believe he is "good"'
-    sender_id: 1
-    timestamp: Date.now() - 1000000000
-  ]
+pg = require 'pg'
+connectionString = process.env.DATABASE_URL or 'postgres://localhost:5432/minerva'
 
-module.exports =
+getMessages = (conversationId, callback) ->
+  results = []
+  pg.connect connectionString, (err, client, done) ->
+    if err
+      done!
+      console.log err
+      callback err null
+    query = client.query 'SELECT text, sender_id, timestamp FROM messages WHERE conversation_id = $1', [conversationId]
+    query.on 'row', (row) ->
+      results.push row
+      return
+    query.on 'end', ->
+      done!
+      callback null results
+    return
+  return
+
+postMessages = (req, res, next) ->
+  data = {
+    (req.body)conversation_id
+    (req.body)sender_id
+    (req.body)text
+    (req.body)timestamp
+  }
+  pg.connect connectionString, (err, client, done) ->
+    if err
+      done!
+      console.log err
+      return (res.status 500).json success: false
+    query = client.query 'INSERT INTO messages(conversation_id, sender_id, text, timestamp) values($1, $2, $3, $4)', [
+      data.conversation_id
+      data.sender_id
+      data.text
+      data.timestamp
+    ]
+    query.on 'end', ->
+      done!
+      (res.status 200).json success: true
+    return
+  return
+
+module.exports = {
   getMessages: getMessages
+  postMessages: postMessages
+}
