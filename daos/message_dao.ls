@@ -1,15 +1,22 @@
-getMessages = (conversationId) ->
-  [
-  * text: 'hello hello hello how how are you?'
-    sender_id: 1
-    timestamp: Date.now() - 1
-  * text: 'hello, i\'m good your self?'
-    sender_id: 2
-    timestamp: Date.now() - 10
-  * text: 'Hello hello Yeah, I\m fine as well! I can not believe he is "good"'
-    sender_id: 1
-    timestamp: Date.now()
-  ]
+pg = require 'pg'
+connectionString = process.env.DATABASE_URL or 'postgres://localhost:5432/minerva'
+
+getMessages = (conversationId, callback) ->
+  results = []
+  pg.connect connectionString, (err, client, done) ->
+    if err
+      done!
+      console.log err
+      callback err null
+    query = client.query 'SELECT text, sender_id, timestamp FROM messages WHERE conversation_id = $1', [conversationId]
+    query.on 'row', (row) ->
+      results.push row
+      return
+    query.on 'end', ->
+      done!
+      callback null results
+    return
+  return
 
 module.exports =
   getMessages: getMessages

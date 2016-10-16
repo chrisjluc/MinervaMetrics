@@ -9,8 +9,8 @@ mainRoutes = require './routers/main_router'
 app = express!
   ..set 'view engine', 'pug'
   ..set 'views', __dirname
-  ..use bodyParser.json()
-  ..use bodyParser.urlencoded({extended: true})
+  ..use bodyParser.json!
+  ..use bodyParser.urlencoded extended: true
   ..use '/', mainRoutes
   ..use '/api', apiRoutes
   ..use webpackDevMiddleware webpack require './webpack-config.ls'
