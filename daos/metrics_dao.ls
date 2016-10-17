@@ -89,23 +89,16 @@ getMessageCountMetric  = (query, callback) ->
         return callback err, []
       callback err, postProcessMessageCountResults result, period
 
-PERIOD_TO_MS =
-  'hour': 1000 * 60 * 60
-  'day': 1000 * 60 * 60 * 24
 
 postProcessMessageCountResults = (result, period) ->
   rows = result.rows
   rows = rows.map (obj) ->
-    year = obj.year
-    month = obj.month
-    day = obj.day || 0
-    hour = obj.hour || 0
-    date = new Date year, month, day, hour
+    date = convertDateObjToJSDate(obj)
     timestamp = date.getTime!
     return [timestamp, parseInt obj.count]
 
   timestamps = rows.map (x) -> x[0]
-  timestampMap = new Map rows
+  timestampToCountMap = new Map rows
 
   firstTimestamp = timestamps.reduce (a, b) ->
     Math.min a, b
@@ -116,16 +109,29 @@ postProcessMessageCountResults = (result, period) ->
   ret = []
   date = new Date firstTimestamp
   while date <= lastTimestamp
-    count = 0
-    if timestampMap.get date.getTime!
-      count = timestampMap.get date.getTime!
-    ret.push timestamp:date.getTime!, count: count
+    timestamp = date.getTime!
+    count = (timestampToCountMap.get timestamp) || 0
+    ret.push timestamp: timestamp, count: count
+    incrementPeriod(date, period)
+
+  return ret
+
+
+incrementPeriod = (date, period) ->
     switch period
     when 'hour' then date.setHours date.getHours! + 1
     when 'day' then date.setDate date.getDate! + 1
     when 'month' then date.setMonth date.getMonth! + 1
+    date
 
-  return ret
+
+convertDateObjToJSDate = (obj) ->
+    year = obj.year
+    month = obj.month
+    day = obj.day || 1
+    hour = obj.hour || 0
+    new Date year, month, day, hour
+
 
 module.exports =
   saveWordCountMetric: saveWordCountMetric
