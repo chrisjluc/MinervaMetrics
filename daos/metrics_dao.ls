@@ -72,10 +72,14 @@ getMessageCountMetric  = (query, callback) ->
       group_query += ', hour'
 
     if startTimestamp
-      where_query += ' AND timestamp >= $2'
+      where_query += ' AND timestamp >= to_timestamp($2)'
       args.push startTimestamp
+
     if endTimestamp
-      where_query += ' AND timestamp <= $3'
+      if startTimestamp
+        where_query += ' AND timestamp <= to_timestamp($3)'
+      else
+        where_query += ' AND timestamp <= to_timestamp($2)'
       args.push endTimestamp
 
     final_query = select_query + from_query + where_query + group_query
@@ -91,6 +95,9 @@ getMessageCountMetric  = (query, callback) ->
 
 
 postProcessMessageCountResults = (result, period) ->
+  if !result || !result.rows || result.rows.length == 0
+    return []
+
   rows = result.rows
   rows = rows.map (obj) ->
     date = convertDateObjToJSDate(obj)
