@@ -23,7 +23,39 @@ getParticipants = (conversationId, callback) ->
       console.log err
       return callback err null
     client.query(
-      'SELECT facebook_user.name FROM user_conversation, facebook_user WHERE user_conversation.conversation_id = $1 AND user_conversation.user_id = facebook_user.user_id',
+      'SELECT facebook_user.name, facebook_user.user_id FROM user_conversation, facebook_user WHERE user_conversation.conversation_id = $1 AND user_conversation.user_id = facebook_user.user_id',
+      [conversationId],
+      (err, result) ->
+        done!
+        if err
+          console.error err
+        callback null result.rows
+    )
+
+getLatestTime = (conversationId, callback) ->
+  pool.acquireClient (err, client, done) ->
+    if err
+      done!
+      console.log err
+      return callback err null
+    client.query(
+      'SELECT max(timestamp) as latest_time FROM message WHERE message.conversation_id = $1',
+      [conversationId],
+      (err, result) ->
+        done!
+        if err
+          console.error err
+        callback null result.rows
+    )
+
+getCount = (conversationId, callback) ->
+  pool.acquireClient (err, client, done) ->
+    if err
+      done!
+      console.log err
+      return callback err null
+    client.query(
+      'SELECT COUNT(message_id) FROM message WHERE message.conversation_id = $1',
       [conversationId],
       (err, result) ->
         done!
@@ -51,3 +83,5 @@ postParticipants = (data, callback) ->
 module.exports =
   getConversations: getConversations
   getParticipants: getParticipants
+  getLatestTime: getLatestTime
+  getCount: getCount
