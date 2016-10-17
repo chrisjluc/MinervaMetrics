@@ -23,7 +23,7 @@ getParticipants = (conversationId, callback) ->
       console.log err
       return callback err null
     client.query(
-      'SELECT user_id FROM user_conversation WHERE conversation_id = $1',
+      'SELECT facebook_user.name FROM user_conversation, facebook_user WHERE user_conversation.conversation_id = $1 AND user_conversation.user_id = facebook_user.user_id',
       [conversationId],
       (err, result) ->
         done!
