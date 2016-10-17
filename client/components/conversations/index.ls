@@ -31,6 +31,7 @@ class Conversations extends react.Component
           withCredentials: false
         request convoOptions, (cErr, cResp, cBody) ~>
           convo = JSON.parse cBody
+          convo.conversation_id = conversation.conversation_id
           prevConvos = @state.conversations
           prevConvos.push convo
           @setState conversations: prevConvos
@@ -42,10 +43,24 @@ class Conversations extends react.Component
       withCredentials: false
     request options, (err, resp, body) ~>
       metrics = @state.metrics
-      console.log body
-      metrics[i] = 
-        mostFrequentWords: JSON.parse body
-        
+      if metrics[i]
+        metrics[i].mostFrequentWords = JSON.parse body
+      else
+        metrics[i] =
+          mostFrequentWords: JSON.parse body
+      @setState metrics: metrics
+
+  getMessageFreq: (i) ~>
+    options =
+      url: "http://127.0.0.1:8000/api/analytics/message-count?conversation_id=#{i}&period=hour"
+      withCredentials: false
+    request options, (err, resp, body) ~>
+      metrics = @state.metrics
+      if metrics[i]
+        metrics[i].messageCount = JSON.parse body
+      else
+        metrics[i] =
+          messageCount: JSON.parse body
       @setState metrics: metrics
 
 
@@ -55,6 +70,7 @@ class Conversations extends react.Component
 
   analyze: (i) ~>
     @getTopWords i
+    @getMessageFreq i
 
 
   render: ->
@@ -66,7 +82,7 @@ class Conversations extends react.Component
           Conversation {
             key: i
             conversation: conversation
-            onClick: ~> @selectConvo i
+            onClick: ~> @selectConvo conversation.conversation_id
           }
 
       div className: 'analytics-pane',
@@ -78,7 +94,7 @@ class Conversations extends react.Component
         else
           div {},
             MostFrequentWords mostFrequentWords: @state.metrics[@state.selectedConvo].mostFrequentWords
-            MessageFrequency {}
+            MessageFrequency messageFrequency: @state.metrics[@state.selectedConvo].messageFrequency
             FrequentTopics {}
 
   testMsgs = [
