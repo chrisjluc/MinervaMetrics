@@ -15,7 +15,7 @@ postProcessMessageCountResults = (results, period) ->
   rows = results.map (obj) ->
     date = convertDateObjToJSDate obj
     timestamp = date.getTime!
-    return [timestamp, parseInt obj.count]
+    [timestamp, parseInt obj.count]
 
   timestamps = rows.map (x) -> x[0]
   timestampToCountMap = new Map rows
