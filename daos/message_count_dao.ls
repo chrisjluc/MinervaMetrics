@@ -1,48 +1,11 @@
 pool = require '../database/pool'
 
-saveWordCountMetric = (conversationId, senderId, word, count) ->
-  pool.acquireClient (err, client, done) ->
-    if err
-      done!
-      console.log err
-    client.query(
-      'INSERT INTO wordcount VALUES ($1, $2, $3, $4)',
-      [conversationId, senderId, word, count],
-      (err, result) ->
-        done!
-        if err
-          console.log err
-        console.log 'succesfully saved word count metric'
-    )
-
-getTopWordsMetric = (conversationId, senderId, callback) ->
-  pool.acquireClient (err, client, done) ->
-    if err
-      done!
-      console.log err
-
-    query = 'SELECT sender_id, word, count FROM wordcount WHERE conversation_id=$1'
-    values = [conversationId]
-    if senderId
-      query = query.concat ' AND sender_id=$2'
-      values.push senderId
-    query = query.concat ' ORDER BY count DESC LIMIT 100'
-
-    client.query(
-      query,
-      values,
-      (err, result) ->
-        done!
-        callback err, result.rows
-    )
-
-
-getMessageCountMetric  = (query, callback) ->
+getMessageCountOverTime = (query, callback) ->
 
   pool.acquireClient (err, client, done) ->
     if err
       done!
-      console.error err
+      return console.error err
 
     conversationId = query.conversation_id
     period = query.period
@@ -91,10 +54,26 @@ getMessageCountMetric  = (query, callback) ->
         if err
           console.error err
         return callback err, []
-      callback err, postProcessMessageCountResults result, period
+      callback err, result.rows
 
+getTotalMessageCount = (conversationId, callback) ->
+  pool.acquireClient (err, client, done) ->
+    if err
+      done!
+      console.log err
+      return callback err, null
+    client.query(
+      'SELECT COUNT(message_id) FROM message WHERE message.conversation_id = $1',
+      [conversationId],
+      (err, result) ->
+        done!
+        if err
+          console.error err
+          return callback err, null
+        callback null result.rows
+    )
 
 
 module.exports =
-  saveWordCountMetric: saveWordCountMetric
-  getTopWordsMetric: getTopWordsMetric
+  getMessageCountOverTime: getMessageCountOverTime
+  getTotalMessageCount: getTotalMessageCount
