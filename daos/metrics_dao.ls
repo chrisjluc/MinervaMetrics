@@ -98,8 +98,7 @@ postProcessMessageCountResults = (result, period) ->
   if !result || !result.rows || result.rows.length == 0
     return []
 
-  rows = result.rows
-  rows = rows.map (obj) ->
+  rows = result.rows.map (obj) ->
     date = convertDateObjToJSDate(obj)
     timestamp = date.getTime!
     return [timestamp, parseInt obj.count]
