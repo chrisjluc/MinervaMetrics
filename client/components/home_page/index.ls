@@ -10,7 +10,7 @@ class HomePage extends react.Component
   responseFacebook: (resp) ->
     console.log JSON.stringify resp
     if !resp.error
-      browserHistory.push "/conversations/#{resp.email}"
+      browserHistory.push "/conversations/#{resp.id}"
 
   render: ~>
     div className: 'c-home-page',

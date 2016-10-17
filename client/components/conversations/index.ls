@@ -13,7 +13,7 @@ class Conversations extends react.Component
   
   ->
     @state = 
-      conversations: testMsgs
+      conversations: []
       selectedConvo: -1
       metrics: {}
     setTimeout (~> @getConversations!), 1000
@@ -21,6 +21,28 @@ class Conversations extends react.Component
 
   getConversations: ~>
     console.log JSON.stringify @props
+    options =
+      url: "http://127.0.0.1:8000/api/conversations?user_id=1"#{@props.params.userId}"
+      withCredentials: false
+    request options, (err, resp, body) ~>
+      conversations = JSON.parse body
+      console.log conversations
+      convos = []
+      conversations.map (conversation) ->
+        participantsOptions =
+          url: "http://127.0.0.1:8000/api/participants?conversation_id=#{conversation.conversation_id}"
+          withCredentials: false
+        request participantsOptions, (participantsErr, participantsResp, participantsBody) ~>
+          participants = JSON.parse participantsBody
+          console.log participants
+          convo =
+            recipients: []
+            # time:
+          participants.forEach (participants) ->
+            convo.recipients.push participants.user_id
+          prevConvos = @state.conversations
+          prevConvos.push convo
+          @setState conversations: prevConvos
 
 
   getTopWords: (i) ~>

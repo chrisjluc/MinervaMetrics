@@ -15,7 +15,7 @@ class Root extends react.Component
       Redirect from: '/', to: '/welcome'
       Route path: '/', component: Layout,
         Route path: '/welcome', component: HomePage
-        Route path: '/conversations/:email', component: Conversations
+        Route path: '/conversations/:userId', component: Conversations
 
 
 module.exports = Root

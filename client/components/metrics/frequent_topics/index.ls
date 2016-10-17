@@ -15,8 +15,8 @@ class FrequentTopics extends react.Component
           datasets: [
             {
               label: 'Topics of Discussion'
-              backgroundColor: 'rgba(0, 84, ff, 0)'
-              borderColor: '#0084ff00'
+              backgroundColor: '#0084ff'
+              borderColor: '#0084ff'
               pointBackgroundColor: '#0084ff'
               pointBorderColor: '#fff'
               pointHoverBackgroundColor: '#fff'
