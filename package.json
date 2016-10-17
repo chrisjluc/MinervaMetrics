@@ -4,7 +4,7 @@
   "description": "Conversation Analytics",
   "main": "index.ls",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --compilers ls:livescript",
     "start": "lsc index.ls",
     "db": "psql -f database_scripts/db_setup.sql"
   },
@@ -19,9 +19,12 @@
   },
   "homepage": "https://github.com/chrisjluc/MinervaMetrics",
   "devDependencies": {
+    "chai": "^3.5.0",
     "css-loader": "^0.23.1",
     "express": "^4.14.0",
+    "livescript": "^1.5.0",
     "livescript-loader": "^0.1.5",
+    "mocha": "^3.1.2",
     "pug": "^0.1.0",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
