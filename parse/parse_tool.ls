@@ -2,26 +2,25 @@ require! https
 messageDAO = require '../daos/message_dao'
 
 args = process.argv.slice 2
-access_token = args[0]
+accessToken = args[0]
 
 i = 0
-number_of_conversations = 1
+numberOfConversations = 1
 thread_limit = 5
 
 convoID = ""
 
-get_inbox_option = 
+inboxOption = 
   host: 'graph.facebook.com'
-  path: '/v2.3/me/inbox?fields=message&limit=' + number_of_conversations + '&access_token=' + access_token
+  path: '/v2.3/me/inbox?fields=message&limit=' + numberOfConversations + '&access_token=' + accessToken
   method: 'GET'
 
 convo = []
 participants = []
-err = false
 
 insertMessageToDatabase = (convo) ->
   for message in convo
-    messageDAO.getMessages message, null
+    messageDAO.postMessages message, null
 
 
 insertParticipantToDatabase = (participants) ->
@@ -36,7 +35,6 @@ httpCall = (callback, options) ->
       parsed = JSON.parse body
       if parsed.error
           console.log parsed.error
-          err = true
       else
         callback parsed
             
@@ -45,18 +43,18 @@ getConversations = (parsed) ->
   for conversation in parsed.data
     convoID = conversation.id
 
-    get_message_options = 
+    messageOptions = 
       host: 'graph.facebook.com'
-      path: '/v2.3/' + convoID + '/comments?limit=1000&access_token=' + access_token
+      path: '/v2.3/' + convoID + '/comments?limit=1000&access_token=' + accessToken
       method: 'GET'
 
-    get_participant_options = 
+    participantOptions = 
       host: 'graph.facebook.com'
-      path: '/v2.3/' + convoID + '?fields=to&access_token=' + access_token
+      path: '/v2.3/' + convoID + '?fields=to&access_token=' + accessToken
       method: 'GET'
 
-    httpCall parseParticipants, get_participant_options
-    httpCall parseMessages, get_message_options
+    httpCall parseParticipants, participantOptions
+    httpCall parseMessages, messageOptions
 
 parseParticipants = (parsed) ->
   console.log(parsed.to.data.length)
@@ -81,7 +79,7 @@ parseMessages = (parsed) ->
       convoID
       sender
       comment.message
-      comment.created_time
+      comment.createdTime
     ]
     convo.push message
 
@@ -90,5 +88,5 @@ parseMessages = (parsed) ->
   i += 1
   httpCall parseMessages, parsed.paging.next
 
-httpCall getConversations, get_inbox_option
+httpCall getConversations, inboxOption
 
