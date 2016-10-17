@@ -25,20 +25,12 @@ class Conversations extends react.Component
       withCredentials: false
     request options, (err, resp, body) ~>
       conversations = JSON.parse body
-      console.log conversations
-      convos = []
       conversations.map (conversation) ~>
-        participantsOptions =
-          url: "http://127.0.0.1:8000/api/participants?conversation_id=#{conversation.conversation_id}"
+        convoOptions =
+          url: "http://127.0.0.1:8000/api/conversation-data?conversation_id=#{conversation.conversation_id}"
           withCredentials: false
-        request participantsOptions, (participantsErr, participantsResp, participantsBody) ~>
-          participants = JSON.parse participantsBody
-          console.log participants
-          convo =
-            recipients: []
-            # time:
-          participants.forEach (participants) ->
-            convo.recipients.push participants.user_id
+        request convoOptions, (cErr, cResp, cBody) ~>
+          convo = JSON.parse cBody
           prevConvos = @state.conversations
           prevConvos.push convo
           @setState conversations: prevConvos
