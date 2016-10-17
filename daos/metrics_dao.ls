@@ -105,6 +105,7 @@ postProcessMessageCountResults = (result, period) ->
     return [timestamp, parseInt obj.count]
 
   timestamps = rows.map (x) -> x[0]
+  timestampMap = new Map rows
 
   firstTimestamp = timestamps.reduce (a, b) ->
     Math.min a, b
