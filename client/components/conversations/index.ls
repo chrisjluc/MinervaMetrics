@@ -4,6 +4,7 @@ browserHistory = require 'react-router/lib/browserHistory'
 {button, div, input} = react.DOM
 MostFrequentWords = react.createFactory require '../metrics/most_frequent_words'
 MessageFrequency = react.createFactory require '../metrics/message_frequency'
+FrequentTopics = react.createFactory require '../metrics/frequent_topics'
 Conversation = react.createFactory require './conversation'
 request = require 'request'
 
@@ -15,6 +16,11 @@ class Conversations extends react.Component
       conversations: testMsgs
       selectedConvo: -1
       metrics: {}
+    setTimeout (~> @getConversations!), 1000
+
+
+  getConversations: ~>
+    console.log JSON.stringify @props
 
 
   getTopWords: (i) ~>
@@ -60,6 +66,7 @@ class Conversations extends react.Component
           div {},
             MostFrequentWords mostFrequentWords: @state.metrics[@state.selectedConvo].mostFrequentWords
             MessageFrequency {}
+            FrequentTopics {}
 
   testMsgs = [
     {

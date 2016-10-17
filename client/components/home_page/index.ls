@@ -10,7 +10,7 @@ class HomePage extends react.Component
   responseFacebook: (resp) ->
     console.log JSON.stringify resp
     if !resp.error
-      browserHistory.push '/conversations'
+      browserHistory.push "/conversations/#{resp.email}"
 
   render: ~>
     div className: 'c-home-page',
@@ -23,7 +23,7 @@ class HomePage extends react.Component
         socialId:'361098944231495'
         language: 'en_US'
         scope: 'public_profile,email'
-        fields: 'email'
+        fields: 'email,name'
         responseHandler: @responseFacebook
         xfbml: true
         version: 'v2.5'
