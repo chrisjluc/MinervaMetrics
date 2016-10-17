@@ -116,7 +116,6 @@ postProcessMessageCountResults = (result, period) ->
   ret = []
   date = new Date firstTimestamp
   while date <= lastTimestamp
-    console.log date
     count = 0
     if timestampMap.get date.getTime!
       count = timestampMap.get date.getTime!
