@@ -44,4 +44,21 @@ apiRouter.get '/participants/', (req, res) ->
     res.status 200
       ..json result
 
+apiRouter.get '/conversation-data/', (req, res) ->
+  hash = {}
+  conversationDAO.getParticipants req.query.conversation_id, (err, participants) ->
+    if err
+      return res.status 500 .json success: false
+    hash['participants'] = participants
+    conversationDAO.getLatestTime req.query.conversation_id, (err, time) ->
+      if err
+        return res.status 500 .json success: false
+      hash['latest_time'] = time[0]['latest_time']
+      conversationDAO.getCount req.query.conversation_id, (err, count) ->
+        if err
+          return res.status 500 .json success: false
+        hash['count'] = count[0]['count']
+        res.status 200
+          ..json hash
+
 module.exports = apiRouter
