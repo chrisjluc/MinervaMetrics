@@ -13,6 +13,13 @@ apiRouter.get '/analytics/top-words', (req, res) ->
     res.status 200
       ..json result
 
+apiRouter.get '/analytics/message-count', (req, res) ->
+  metricsDAO.getMessageCountMetric req.query, (err, result) ->
+    if err
+      return res.status 500 .json success: false
+    res.status 200
+      ..json result
+
 apiRouter.post '/messages/', messageDAO.postMessages
 
 apiRouter.get '/messages/', (req, res) ->
