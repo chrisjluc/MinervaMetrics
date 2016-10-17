@@ -1,4 +1,5 @@
 require! express
+topWordsAnalytics = require '../analytics/top_words_analytics'
 conversationDAO = require '../daos/conversation_dao'
 messageDAO = require '../daos/message_dao'
 metricsDAO = require '../daos/metrics_dao'
@@ -6,9 +7,7 @@ metricsDAO = require '../daos/metrics_dao'
 apiRouter = express.Router!
 
 apiRouter.get '/analytics/top-words', (req, res) ->
-  conversationId = req.query.conversation_id
-  senderId = req.query.sender_id
-  metricsDAO.getTopWordsMetric conversationId, senderId, (err, result) ->
+  topWordsAnalytics.getTopWordsMetric req.query, (err, result) ->
     if err
       return res.status 500 .json success: false
     res.status 200
