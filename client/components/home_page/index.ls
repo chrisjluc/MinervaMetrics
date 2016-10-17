@@ -8,7 +8,6 @@ FacebookLogin = react.createFactory (require 'react-facebook-login-component').F
 class HomePage extends react.Component
   
   responseFacebook: (resp) ->
-    console.log JSON.stringify resp
     if !resp.error
       browserHistory.push "/conversations/#{resp.id}"
 
@@ -17,7 +16,8 @@ class HomePage extends react.Component
       div className: 'description',
         p {},
           '''
-          Analyze your Facebook messages
+          Minerva Metrics is a Conversation Analysis tool that generates fun and interesting metrics from your Facebook messages.
+          Login with Facebook to get started!
           '''
       FacebookLogin {
         socialId:'361098944231495'

@@ -20,7 +20,6 @@ class Conversations extends react.Component
 
 
   getConversations: ~>
-    console.log JSON.stringify @props
     options =
       url: "http://127.0.0.1:8000/api/conversations?user_id=1"#{@props.params.userId}"
       withCredentials: false
@@ -28,7 +27,7 @@ class Conversations extends react.Component
       conversations = JSON.parse body
       console.log conversations
       convos = []
-      conversations.map (conversation) ->
+      conversations.map (conversation) ~>
         participantsOptions =
           url: "http://127.0.0.1:8000/api/participants?conversation_id=#{conversation.conversation_id}"
           withCredentials: false

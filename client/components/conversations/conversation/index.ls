@@ -7,7 +7,7 @@ class Conversation extends react.Component
     div className: 'c-conversation', onClick: @props.onClick,
       div className: 'avatar'
       div className: 'conversation-summary',
-        span className: 'name', @props.conversation.recipients.map (r) -> r
+        span className: 'name', @props.conversation.recipients.map (r, i) -> "User#{r} "
         # span className: 'time', @props.conversation.time
         # div className: 'summary', @props.conversation.summary
 
