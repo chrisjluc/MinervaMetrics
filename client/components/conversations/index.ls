@@ -4,6 +4,7 @@ browserHistory = require 'react-router/lib/browserHistory'
 {button, div, input} = react.DOM
 MostFrequentWords = react.createFactory require '../metrics/most_frequent_words'
 MessageFrequency = react.createFactory require '../metrics/message_frequency'
+FrequentTopics = react.createFactory require '../metrics/frequent_topics'
 Conversation = react.createFactory require './conversation'
 request = require 'request'
 
@@ -12,9 +13,35 @@ class Conversations extends react.Component
   
   ->
     @state = 
-      conversations: testMsgs
+      conversations: []
       selectedConvo: -1
       metrics: {}
+    setTimeout (~> @getConversations!), 1000
+
+
+  getConversations: ~>
+    options =
+      url: "http://127.0.0.1:8000/api/conversations?user_id=1"#{@props.params.userId}"
+      withCredentials: false
+    request options, (err, resp, body) ~>
+      conversations = JSON.parse body
+      console.log conversations
+      convos = []
+      conversations.map (conversation) ~>
+        participantsOptions =
+          url: "http://127.0.0.1:8000/api/participants?conversation_id=#{conversation.conversation_id}"
+          withCredentials: false
+        request participantsOptions, (participantsErr, participantsResp, participantsBody) ~>
+          participants = JSON.parse participantsBody
+          console.log participants
+          convo =
+            recipients: []
+            # time:
+          participants.forEach (participants) ->
+            convo.recipients.push participants.user_id
+          prevConvos = @state.conversations
+          prevConvos.push convo
+          @setState conversations: prevConvos
 
 
   getTopWords: (i) ~>
@@ -60,6 +87,7 @@ class Conversations extends react.Component
           div {},
             MostFrequentWords mostFrequentWords: @state.metrics[@state.selectedConvo].mostFrequentWords
             MessageFrequency {}
+            FrequentTopics {}
 
   testMsgs = [
     {
