@@ -1,5 +1,6 @@
 require! https
 messageDAO = require '../daos/message_dao'
+conversationDAO = require '../daos/conversation_dao'
 
 args = process.argv.slice 2
 accessToken = args[0]
@@ -24,7 +25,8 @@ insertMessageToDatabase = (convo) ->
 
 
 insertParticipantToDatabase = (participants) ->
-  return
+  for participant in participants
+    conversationDAO.postParticipants participant, null
 
 httpCall = (callback, options) ->
   https.get options, (response) ->
@@ -59,7 +61,7 @@ getConversations = (parsed) ->
 parseParticipants = (parsed) ->
   console.log(parsed.to.data.length)
   for user in parsed.to.data
-    participants.push user
+    participants.push [convoID,user]
   console.log participants
   insertMessageToDatabase(participants)
 
