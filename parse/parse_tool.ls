@@ -1,22 +1,32 @@
 require! https
+messageDAO = require '../daos/message_dao'
 
 args = process.argv.slice 2
-convoID = args[0]
-access_token = args[1]
+accessToken = args[0]
 
-p = '/v2.3/' + convoID + '?fields=to%2Ccomments.limit(1000)&access_token=' + access_token
+i = 0
+numberOfConversations = 1
+thread_limit = 5
 
-console.log(p)
+convoID = ""
 
-options = 
+inboxOption = 
   host: 'graph.facebook.com'
-  path: p
+  path: '/v2.3/me/inbox?fields=message&limit=' + numberOfConversations + '&access_token=' + accessToken
   method: 'GET'
 
 convo = []
-threads_parsed = 0
+participants = []
 
-getTestPersonaLoginCredentials = (callback, options) ->
+insertMessageToDatabase = (convo) ->
+  for message in convo
+    messageDAO.postMessages message, null
+
+
+insertParticipantToDatabase = (participants) ->
+  return
+
+httpCall = (callback, options) ->
   https.get options, (response) ->
     body = ''
     response.on 'data', (d) -> 
@@ -28,25 +38,55 @@ getTestPersonaLoginCredentials = (callback, options) ->
       else
         callback parsed
             
-        
 
+getConversations = (parsed) ->
+  for conversation in parsed.data
+    convoID = conversation.id
 
-callback_fn = (parsed) ->
-  for comment in parsed.comments.data
+    messageOptions = 
+      host: 'graph.facebook.com'
+      path: '/v2.3/' + convoID + '/comments?limit=1000&access_token=' + accessToken
+      method: 'GET'
+
+    participantOptions = 
+      host: 'graph.facebook.com'
+      path: '/v2.3/' + convoID + '?fields=to&access_token=' + accessToken
+      method: 'GET'
+
+    httpCall parseParticipants, participantOptions
+    httpCall parseMessages, messageOptions
+
+parseParticipants = (parsed) ->
+  console.log(parsed.to.data.length)
+  for user in parsed.to.data
+    participants.push user
+  console.log participants
+  insertMessageToDatabase(participants)
+
+parseMessages = (parsed) ->
+  console.log(parsed.data.length)
+
+  if parsed.data.length == 0 or i > thread_limit
+    err = true
+    console.log("end")
+    insertMessageToDatabase convo
+    return
+
+  for comment in parsed.data
     sender = comment.from.id
-    message = 
-      sender_id: sender
-      thread_id: convoID
-      text: comment.message
-      timestamp: comment.created_time
-
+    message = [
+      comment.id
+      convoID
+      sender
+      comment.message
+      comment.createdTime
+    ]
     convo.push message
 
   console.log convo.length
-  options = parsed.comments.paging.next
+  console.log convo[convo.length - 1]
+  i += 1
+  httpCall parseMessages, parsed.paging.next
 
-
-for i from 1 to 10
-  getTestPersonaLoginCredentials callback_fn, options
-
+httpCall getConversations, inboxOption
 
