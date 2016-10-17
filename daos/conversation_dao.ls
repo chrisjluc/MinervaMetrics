@@ -39,7 +39,7 @@ postParticipants = (data, callback) ->
       console.err err
       return callback err
     client.query(
-      'INSERT INTO user_conversation(conversation_id,user_id) values($1,$2)',
+      'INSERT INTO user_conversation(conversation_id,user_id) VALUES($1,$2)',
       data,
       (err, result) ->
         done!
