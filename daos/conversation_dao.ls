@@ -4,7 +4,7 @@ getConversations = (userId, callback) ->
   pool.acquireClient (err, client, done) ->
     if err
       done!
-      console.log err
+      console.error err
       return callback err null
     client.query(
       'SELECT conversation_id FROM user_conversation WHERE user_id = $1',
@@ -12,7 +12,7 @@ getConversations = (userId, callback) ->
       (err, result) ->
         done!
         if err
-          console.err err
+          console.error err
         callback null result.rows
     )
 
@@ -28,7 +28,7 @@ getParticipants = (conversationId, callback) ->
       (err, result) ->
         done!
         if err
-          console.err err
+          console.error err
         callback null result.rows
     )
 

@@ -13,7 +13,7 @@ getMessages = (conversationId, callback) ->
       (err, result) ->
         done!
         if err
-          console.err err
+          console.error err
         callback null result.rows
     )
 
@@ -21,7 +21,7 @@ postMessages = (data, callback) ->
   pool.acquireClient (err, client, done) ->
     if err
       done!
-      console.err err
+      console.error err
       return callback err
     client.query(
       'INSERT INTO message(message_id, conversation_id, sender_id, text, timestamp) values($1, $2, $3, $4, $5)',
@@ -29,7 +29,7 @@ postMessages = (data, callback) ->
       (err, result) ->
         done!
         if err
-          console.err err
+          console.error err
         callback null
     )
 
