@@ -1,9 +1,9 @@
 require! express
-topWordsAnalytics = require '../analytics/top_words_analytics'
+topWordsAnalytics = require '../analytics/top_words'
 conversationDAO = require '../daos/conversation_dao'
 messageDAO = require '../daos/message_dao'
 messageCountDAO = require '../daos/message_count_dao'
-messageCountAnalytics = require '../analytics/message_count.ls'
+messageCountAnalytics = require '../analytics/message_count'
 
 apiRouter = express.Router!
 
