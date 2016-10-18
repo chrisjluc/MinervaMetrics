@@ -13,16 +13,22 @@ class FrequentTopics extends react.Component
         data:
           labels: <[ Sports School Gaming Work Music ]>
           datasets: [
-            {
-              label: 'Topics of Discussion'
+            * label: 'Chris'
               backgroundColor: 'rgba(0,132,255, 0.4)'
               borderColor: 'rgba(0,132,255, 0.4)'
               pointBackgroundColor: 'rgba(0,132,255, 0.4)'
               pointBorderColor: 'rgba(0,132,255, 0.4)'
               pointHoverBackgroundColor: 'rgba(0,132,255, 0.8)'
               pointHoverBorderColor: 'rgba(0,132,255, 0.8)'
-              data: [90 50 90 60 60]
-            }
+              data: [50 80 20 75 60]
+            * label: 'Darren'
+              backgroundColor: 'rgba(255,99,132,0.4)'
+              borderColor: 'rgba(255,99,132,0.4)'
+              pointBackgroundColor: 'rgba(255,99,132,0.4)'
+              pointBorderColor: 'rgba(255,99,132,0.4)'
+              pointHoverBackgroundColor: 'rgba(255,99,132,0.8)'
+              pointHoverBorderColor: 'rgba(255,99,132,0.8)'
+              data: [90 50 40 30 80]
           ]
         options:
           scale:

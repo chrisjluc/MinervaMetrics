@@ -6,6 +6,8 @@ FacebookLogin = react.createFactory (require 'react-facebook-login-component').F
 MostFrequentWords = react.createFactory require '../metrics/most_frequent_words'
 MessageFrequency = react.createFactory require '../metrics/message_frequency'
 FrequentTopics = react.createFactory require '../metrics/frequent_topics'
+MostTalkative = react.createFactory require '../metrics/most_talkative'
+Emotions = react.createFactory require '../metrics/emotions'
 
 class HomePage extends react.Component
   
@@ -24,8 +26,11 @@ class HomePage extends react.Component
       #     '''
       div className: 'backdrop',
         MostFrequentWords data: testData.topWordsData
+        Emotions {}
+        MostTalkative {}
         MessageFrequency data: testData.messageCountData
         FrequentTopics style: {height: '400px'}
+        
       FacebookLogin {
         socialId: '361098944231495'
         language: 'en_US'
@@ -51,29 +56,29 @@ class HomePage extends react.Component
       * word: 'dary'
         count: 350
     messageCountData:
-      * timestamp: 'Jan'
+      * timestamp: 1472702400000 - 0*2592000000
         count: 50
-      * timestamp: 'Feb'
+      * timestamp: 1472702400000 - 1*2592000000
         count: 60
-      * timestamp: 'Mar'
+      * timestamp: 1472702400000 - 2*2592000000
         count: 77
-      * timestamp: 'Apr'
+      * timestamp: 1472702400000 - 3*2592000000
         count: 40
-      * timestamp: 'May'
+      * timestamp: 1472702400000 - 4*2592000000
         count: 30
-      * timestamp: 'Jun'
+      * timestamp: 1472702400000 - 5*2592000000
         count: 100
-      * timestamp: 'Jul'
+      * timestamp: 1472702400000 - 6*2592000000
         count: 110
-      * timestamp: 'Aug'
+      * timestamp: 1472702400000 - 7*2592000000
         count: 130
-      * timestamp: 'Sep'
+      * timestamp: 1472702400000 - 8*2592000000
         count: 300
-      * timestamp: 'Oct'
+      * timestamp: 1472702400000 - 9*2592000000
         count: 20
-      * timestamp: 'Nov'
+      * timestamp: 1472702400000 - 10*2592000000
         count: 40
-      * timestamp: 'Dec'
+      * timestamp: 1472702400000 - 11*2592000000
         count: 55
 
 

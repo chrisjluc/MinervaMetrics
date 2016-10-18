@@ -97,8 +97,11 @@ class Conversations extends react.Component
             if @state.metrics[@state.selectedConvo].mostFrequentWords
               MostFrequentWords data: @state.metrics[@state.selectedConvo].mostFrequentWords
             if @state.metrics[@state.selectedConvo].messageFrequency
-              MessageFrequency data: @state.metrics[@state.selectedConvo].messageFrequency
-              # FrequentTopics {}
+              MessageFrequency data: @state.metrics[@state.selectedConvo].messageFrequency  
+            if @state.metrics[@state.selectedConvo].mostTalkative
+              MostTalkative data: @state.metrics[@state.selectedConvo].mostTalkative
+            if @state.metrics[@state.selectedConvo].frequentTopics
+              FrequentTopics {}
 
 
 module.exports = Conversations

@@ -5,8 +5,10 @@ react = require 'react'
 LineChart = react.createFactory (require 'react-chartjs-2' .Line)
 
 months = <[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec]>
+
 class MessageFrequency extends react.Component
   render: ~>
+    console.log JSON.stringify @props.data
     div className: 'c-messages-freq',
       div className: 'metric-title', 'Message Frequency'
       LineChart {
