@@ -1,11 +1,11 @@
 pool = require '../database/pool'
 
-getMessageCountMetric  = (query, callback) ->
+getMessageCountOverTime = (query, callback) ->
 
   pool.acquireClient (err, client, done) ->
     if err
       done!
-      console.error err
+      return console.error err
 
     conversationId = query.conversation_id
     period = query.period
@@ -54,9 +54,26 @@ getMessageCountMetric  = (query, callback) ->
         if err
           console.error err
         return callback err, []
-      callback err, postProcessMessageCountResults result, period
+      callback err, result.rows
 
+getTotalMessageCount = (conversationId, callback) ->
+  pool.acquireClient (err, client, done) ->
+    if err
+      done!
+      console.log err
+      return callback err, null
+    client.query(
+      'SELECT COUNT(message_id) FROM message WHERE message.conversation_id = $1',
+      [conversationId],
+      (err, result) ->
+        done!
+        if err
+          console.error err
+          return callback err, null
+        callback null result.rows
+    )
 
 
 module.exports =
-  getMessageCountMetric: getMessageCountMetric
+  getMessageCountOverTime: getMessageCountOverTime
+  getTotalMessageCount: getTotalMessageCount

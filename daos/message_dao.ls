@@ -51,7 +51,23 @@ postMessages = (data, callback) ->
           console.error err
         callback null
     )
+getMostRecentMessage = (conversationId, callback) ->
+  pool.acquireClient (err, client, done) ->
+    if err
+      done!
+      console.log err
+      return callback err null
+    client.query(
+      'SELECT * FROM message WHERE message.conversation_id = $1 ORDER BY timestamp DESC LIMIT 1',
+      [conversationId],
+      (err, result) ->
+        done!
+        if err
+          console.error err
+        callback null result.rows[0]
+    )
 
 module.exports =
   getMessages: getMessages
   postMessages: postMessages
+  getMostRecentMessage: getMostRecentMessage

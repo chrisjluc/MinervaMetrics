@@ -25,20 +25,13 @@ class Conversations extends react.Component
       withCredentials: false
     request options, (err, resp, body) ~>
       conversations = JSON.parse body
-      console.log conversations
-      convos = []
       conversations.map (conversation) ~>
-        participantsOptions =
-          url: "http://127.0.0.1:8000/api/participants?conversation_id=#{conversation.conversation_id}"
+        convoOptions =
+          url: "http://127.0.0.1:8000/api/conversation-data?conversation_id=#{conversation.conversation_id}"
           withCredentials: false
-        request participantsOptions, (participantsErr, participantsResp, participantsBody) ~>
-          participants = JSON.parse participantsBody
-          console.log participants
-          convo =
-            recipients: []
-            # time:
-          participants.forEach (participants) ->
-            convo.recipients.push participants.user_id
+        request convoOptions, (cErr, cResp, cBody) ~>
+          convo = JSON.parse cBody
+          convo.conversation_id = conversation.conversation_id
           prevConvos = @state.conversations
           prevConvos.push convo
           @setState conversations: prevConvos
@@ -50,10 +43,25 @@ class Conversations extends react.Component
       withCredentials: false
     request options, (err, resp, body) ~>
       metrics = @state.metrics
-      console.log body
-      metrics[i] = 
-        mostFrequentWords: JSON.parse body
-        
+      if metrics[i]
+        metrics[i].mostFrequentWords = JSON.parse body
+      else
+        metrics[i] =
+          mostFrequentWords: JSON.parse body
+      @setState metrics: metrics
+
+
+  getMessageFreq: (i) ~>
+    options =
+      url: "http://127.0.0.1:8000/api/analytics/message-count?conversation_id=#{i}&period=month"
+      withCredentials: false
+    request options, (err, resp, body) ~>
+      metrics = @state.metrics
+      if metrics[i]
+        metrics[i].messageFrequency = JSON.parse body
+      else
+        metrics[i] =
+          messageFrequency: JSON.parse body
       @setState metrics: metrics
 
 
@@ -63,6 +71,7 @@ class Conversations extends react.Component
 
   analyze: (i) ~>
     @getTopWords i
+    @getMessageFreq i
 
 
   render: ->
@@ -74,7 +83,7 @@ class Conversations extends react.Component
           Conversation {
             key: i
             conversation: conversation
-            onClick: ~> @selectConvo i
+            onClick: ~> @selectConvo conversation.conversation_id
           }
 
       div className: 'analytics-pane',
@@ -85,72 +94,11 @@ class Conversations extends react.Component
             'Analyze!'
         else
           div {},
-            MostFrequentWords mostFrequentWords: @state.metrics[@state.selectedConvo].mostFrequentWords
-            MessageFrequency {}
-            FrequentTopics {}
-
-  testMsgs = [
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-    {
-      recipient: 'Alice'
-      summary: 'Hi Alice how are you doing...'
-      time: '9:00pm'
-    }
-  ]
+            if @state.metrics[@state.selectedConvo].mostFrequentWords
+              MostFrequentWords mostFrequentWords: @state.metrics[@state.selectedConvo].mostFrequentWords
+            if @state.metrics[@state.selectedConvo].messageFrequency
+              MessageFrequency messageFrequency: @state.metrics[@state.selectedConvo].messageFrequency
+              # FrequentTopics {}
 
 
 module.exports = Conversations
