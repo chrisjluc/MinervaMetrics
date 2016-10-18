@@ -3,7 +3,6 @@ topWordsAnalytics = require '../analytics/top_words_analytics'
 conversationDAO = require '../daos/conversation_dao'
 messageDAO = require '../daos/message_dao'
 messageCountDAO = require '../daos/message_count_dao'
-metricsDAO = require '../daos/metrics_dao'
 messageCountAnalytics = require '../analytics/message_count.ls'
 
 apiRouter = express.Router!

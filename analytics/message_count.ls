@@ -1,6 +1,7 @@
 messageCountDAO = require '../daos/message_count_dao'
 
 getMessageCountOverTimeMetric = (query, callback) ->
+  query.period = (query.period || 'hour')
   messageCountDAO.getMessageCountOverTime query, (err, rows) ->
     if err
       return callback err, null
@@ -16,6 +17,7 @@ postProcessMessageCountResults = (results, period) ->
     date = convertDateObjToJSDate obj
     timestamp = date.getTime!
     [timestamp, parseInt obj.count]
+
 
   timestamps = rows.map (x) -> x[0]
   timestampToCountMap = new Map rows

@@ -1,6 +1,4 @@
 messageDAO = require '../daos/message_dao'
-metricsDAO = require '../daos/metrics_dao'
-
 textSanitizer = require './text_sanitizer'
 
 getTopWordsMetric = (query, callback) ->
