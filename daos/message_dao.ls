@@ -11,7 +11,7 @@ getMessages = (query, callback) ->
     if !query.conversation_id
       done!
       console.error 'conversation_id is undefined'
-      return callback err, null
+      return callback true, null
 
     args = [query.conversation_id]
     startTimestamp = query.start_timestamp

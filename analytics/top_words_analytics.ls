@@ -16,6 +16,9 @@ getTopWordsMetric = (query, callback) ->
         wordCount = wordCounts.get senderId .get word
         wordCounts.get senderId .set word, (wordCount || 0) + 1
     */
+    if err
+      return callback err, null
+
     wordCounts = new Map!
     for message in messages
       text = message.text .toLowerCase!
