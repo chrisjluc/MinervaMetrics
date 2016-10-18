@@ -40,7 +40,7 @@ class HomePage extends react.Component
         xfbml: true
         version: 'v2.5'
         class: 'facebook-login'
-        buttonText: 'Login With Facebook'
+        buttonText: 'Login With Facebook to analyze your own messages!'
       }
 
   testData =
