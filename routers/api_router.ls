@@ -1,7 +1,9 @@
 require! express
 conversationDAO = require '../daos/conversation_dao'
 messageDAO = require '../daos/message_dao'
+messageCountDAO = require '../daos/message_count_dao'
 metricsDAO = require '../daos/metrics_dao'
+messageCountAnalytics = require '../analytics/message_count.ls'
 
 apiRouter = express.Router!
 
@@ -15,7 +17,7 @@ apiRouter.get '/analytics/top-words', (req, res) ->
       ..json result
 
 apiRouter.get '/analytics/message-count', (req, res) ->
-  metricsDAO.getMessageCountMetric req.query, (err, result) ->
+  messageCountAnalytics.getMessageCountOverTimeMetric req.query, (err, result) ->
     if err
       return res.status 500 .json success: false
     res.status 200
@@ -50,11 +52,11 @@ apiRouter.get '/conversation-data/', (req, res) ->
     if err
       return res.status 500 .json success: false
     hash['participants'] = participants
-    conversationDAO.getLatestTime req.query.conversation_id, (err, time) ->
+    messageDAO.getMostRecentMessage req.query.conversation_id, (err, message) ->
       if err
         return res.status 500 .json success: false
-      hash['latest_time'] = time[0]['latest_time']
-      conversationDAO.getCount req.query.conversation_id, (err, count) ->
+      hash['latest_time'] = message.timestamp.getTime()
+      messageCountDAO.getTotalMessageCount req.query.conversation_id, (err, count) ->
         if err
           return res.status 500 .json success: false
         hash['count'] = count[0]['count']
