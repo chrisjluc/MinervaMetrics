@@ -53,3 +53,6 @@ convertDateObjToJSDate = (obj) ->
 
 module.exports =
   getMessageCountOverTimeMetric: getMessageCountOverTimeMetric
+  incrementPeriod: incrementPeriod
+  convertDateObjToJSDate: convertDateObjToJSDate
+  postProcessMessageCountResults: postProcessMessageCountResults
