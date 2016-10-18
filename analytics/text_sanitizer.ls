@@ -27,13 +27,13 @@ stopWords = new Set ['a' 'about' 'above' 'across' 'after' 'afterwards' 'again' '
 'while' 'whither' 'who' 'whoever' 'whole' 'whom' 'whose' 'why' 'will' 'with' 'within' 'without' 'would' 'yet' 'you'
 'your' 'yours' 'yourself' 'yourselves' 'the']
 
-removeStopWords = (text) ->
-  # Assumes punctuation has been removed
-  # and the text has been lowercased
-  words = text.split ' '
-  nonStopWords = [word for let word in words when !stopWords.has word]
-  return nonStopWords.join ' '
+removeStopWords = (words) ->
+  [word for let word in words when !stopWords.has word]
+
+removeSingleLetterWords = (words) ->
+  [word for let word in words when word.length > 1]
 
 module.exports =
   removePunctuation: removePunctuation
   removeStopWords: removeStopWords
+  removeSingleLetterWords: removeSingleLetterWords

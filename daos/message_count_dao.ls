@@ -12,9 +12,6 @@ getMessageCountOverTime = (query, callback) ->
     startTimestamp = query.start_timestamp
     endTimestamp = query.end_timestamp
 
-    if !period
-      period = 'hour'
-
     args = [conversationId]
     select_query = '
         SELECT \
