@@ -4,6 +4,7 @@ react = require 'react'
 {div} = react.DOM
 LineChart = react.createFactory (require 'react-chartjs-2' .Line)
 
+months = <[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec]>
 class MessageFrequency extends react.Component
   render: ~>
     div className: 'c-messages-freq',
@@ -11,13 +12,13 @@ class MessageFrequency extends react.Component
       LineChart {
         className: 'chart'
         data:
-          labels: @props.messageFrequency.map (msg) -> msg.timestamp.toString!
+          labels: @props.data.map (msg) -> months[new Date msg.timestamp .getMonth!]
           datasets: [
             * label: '# Messages'
               fill: false
               lineTension: 0.1
-              backgroundColor: '#0084ff'
-              borderColor: '#0084ff'
+              backgroundColor: 'rgba(0,132,255, 0.4)'#0084ff'
+              borderColor: 'rgba(0,132,255, 0.4)'
               borderCapStyle: 'butt'
               borderDash: []
               borderDashOffset: 0.0
@@ -31,7 +32,7 @@ class MessageFrequency extends react.Component
               pointHoverBorderWidth: 2
               pointRadius: 1
               pointHitRadius: 10
-              data: @props.messageFrequency.map (msg) -> msg.count
+              data: @props.data.map (msg) -> msg.count
               spanGaps: false
           ]
       }

@@ -11,19 +11,23 @@ class FrequentTopics extends react.Component
       RadarChart {
         className: 'chart'
         data:
-          labels: <[ Sports School Gaming Work ]>
+          labels: <[ Sports School Gaming Work Music ]>
           datasets: [
             {
               label: 'Topics of Discussion'
-              backgroundColor: '#0084ff'
-              borderColor: '#0084ff'
-              pointBackgroundColor: '#0084ff'
-              pointBorderColor: '#fff'
-              pointHoverBackgroundColor: '#fff'
-              pointHoverBorderColor: '#0084ff'
-              data: [65 59 90 81]
+              backgroundColor: 'rgba(0,132,255, 0.4)'
+              borderColor: 'rgba(0,132,255, 0.4)'
+              pointBackgroundColor: 'rgba(0,132,255, 0.4)'
+              pointBorderColor: 'rgba(0,132,255, 0.4)'
+              pointHoverBackgroundColor: 'rgba(0,132,255, 0.8)'
+              pointHoverBorderColor: 'rgba(0,132,255, 0.8)'
+              data: [90 50 90 60 60]
             }
           ]
+        options:
+          scale:
+            ticks:
+              beginAtZero: true
       }
 
 

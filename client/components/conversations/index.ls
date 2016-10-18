@@ -95,9 +95,9 @@ class Conversations extends react.Component
         else
           div {},
             if @state.metrics[@state.selectedConvo].mostFrequentWords
-              MostFrequentWords mostFrequentWords: @state.metrics[@state.selectedConvo].mostFrequentWords
+              MostFrequentWords data: @state.metrics[@state.selectedConvo].mostFrequentWords
             if @state.metrics[@state.selectedConvo].messageFrequency
-              MessageFrequency messageFrequency: @state.metrics[@state.selectedConvo].messageFrequency
+              MessageFrequency data: @state.metrics[@state.selectedConvo].messageFrequency
               # FrequentTopics {}
 
 
