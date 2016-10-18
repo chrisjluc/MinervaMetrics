@@ -16,7 +16,7 @@ class Conversations extends react.Component
       conversations: []
       selectedConvo: -1
       metrics: {}
-    setTimeout (~> @getConversations!), 1000
+    setTimeout (~> @getConversations!), 700
 
 
   getConversations: ~>
