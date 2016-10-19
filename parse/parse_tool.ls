@@ -93,3 +93,5 @@ parseConversation = (authToken) ->
 
   httpCall getConversations, inboxOption
 
+module.exports =
+  parseConversation: parseConversation
