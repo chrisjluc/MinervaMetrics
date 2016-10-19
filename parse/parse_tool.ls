@@ -2,19 +2,13 @@ require! https
 messageDAO = require '../daos/message_dao'
 conversationDAO = require '../daos/conversation_dao'
 
-args = process.argv.slice 2
-accessToken = args[0]
-
 i = 0
 numberOfConversations = 1
 thread_limit = 5
 
 convoID = ""
 
-inboxOption = 
-  host: 'graph.facebook.com'
-  path: '/v2.3/me/inbox?fields=message&limit=' + numberOfConversations + '&access_token=' + accessToken
-  method: 'GET'
+accessToken = ""
 
 convo = []
 participants = []
@@ -28,7 +22,7 @@ insertParticipantToDatabase = (participants) ->
   for participant in participants
     conversationDAO.postParticipants participant, null
 
-httpCall = (callback, options) ->
+httpCall = (callback, options,authToken) ->
   https.get options, (response) ->
     body = ''
     response.on 'data', (d) -> 
@@ -90,5 +84,14 @@ parseMessages = (parsed) ->
   i += 1
   httpCall parseMessages, parsed.paging.next
 
-httpCall getConversations, inboxOption
+parseConversation = (authToken) ->
+  accessToken = authToken
+  inboxOption = 
+    host: 'graph.facebook.com'
+    path: '/v2.3/me/inbox?fields=message&limit=' + numberOfConversations + '&access_token=' + accessToken
+    method: 'GET'
 
+  httpCall getConversations, inboxOption
+
+module.exports =
+  parseConversation: parseConversation
