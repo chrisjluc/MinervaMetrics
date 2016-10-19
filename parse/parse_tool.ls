@@ -90,5 +90,6 @@ parseMessages = (parsed) ->
   i += 1
   httpCall parseMessages, parsed.paging.next
 
-httpCall getConversations, inboxOption
+parseConversation = (authToken) ->
+  httpCall getConversations, inboxOption
 
