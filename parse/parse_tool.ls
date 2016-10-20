@@ -18,7 +18,7 @@ insertMessageToDatabase = (messages) ->
 
 insertParticipantToDatabase = (participants,authToken,convoID) ->
 
-  console.log(participants)
+  console.log participants
   messageOptions = 
     host: 'graph.facebook.com'
     path: '/v2.3/' + convoID + '/comments?limit=1000&access_token=' + authToken
@@ -26,24 +26,18 @@ insertParticipantToDatabase = (participants,authToken,convoID) ->
 
 
   createUserConversationsCallback = (err) ->
-    if err
-      return err
-    else
-      console.log("createUserConversationsCallback")
+    if !err
+      console.log "createUserConversationsCallback"
       httpCall parseMessages, messageOptions, convoID
   
   createConversationsCallback = (err) ->
-    if err
-      return err
-    else
-      console.log("createConversationsCallback")
+    if !err
+      console.log "createConversationsCallback"
       conversationDAO.createUserConversations participants, createUserConversationsCallback
 
   createParticipantsCallback = (err) ->
-    if err
-      return err
-    else 
-      console.log("createParticipantsCallback")
+    if !err 
+      console.log "createParticipantsCallback" 
       conversationDAO.createConversations [convoID], createConversationsCallback
 
 
@@ -66,18 +60,29 @@ httpCall = (callback, options, param) ->
 getConversations = (parsed,authToken) ->
   for conversation in parsed.data
     convoID = conversation.id
+
+    console.log conversation.to
+
     participants = []
     for participant in conversation.to.data
-      participants.push [Number(convoID),Number(participant.id),participant.name]
-    console.log("==============================================================================")
-    insertParticipantToDatabase(participants,authToken,convoID)
+
+      console.log participant.id
+      console.log participant.name
+
+      p = [
+        Number convoID
+        Number participant.id
+        participant.name
+      ]
+
+      participants.push p
+    insertParticipantToDatabase participants,authToken,convoID
 
 parseMessages = (parsed,convoID) ->
-  console.log(parsed.data.length)
-  console.log(messages[*-1])
+  console.log messages.length
   if parsed.data.length == 0 or i > thread_limit
     err = true
-    console.log("end")
+    console.log "end" 
     insertMessageToDatabase messages
     return
 
@@ -85,8 +90,8 @@ parseMessages = (parsed,convoID) ->
     sender = comment.from.id
     message = [
       comment.id
-      Number(convoID)
-      Number(sender)
+      Number convoID
+      Number sender
       comment.message
       comment.created_time
     ]

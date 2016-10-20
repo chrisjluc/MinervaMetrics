@@ -33,8 +33,9 @@ getParticipants = (conversationId, callback) ->
     )
 
 createParticipants = (data, callback) ->
-  for d in data
-    pool.acquireClient (err, client, done) ->
+  pool.acquireClient (err, client, done) ->
+    queriesFinished = 0
+    for d in data
       if err
         done!
         console.error err
@@ -46,8 +47,10 @@ createParticipants = (data, callback) ->
           done!
           if err
             console.error err
+          queriesFinished += 1
+          if queriesFinished == data.length
+            callback null
       )
-  callback null
   
 createConversations = (data, callback) ->
 
@@ -68,8 +71,9 @@ createConversations = (data, callback) ->
 
 createUserConversations = (data, callback) ->
 
-  for d in data
-    pool.acquireClient (err, client, done) ->
+  pool.acquireClient (err, client, done) ->
+    queriesFinished = 0
+    for d in data
       if err
         done!
         console.error err
@@ -81,8 +85,11 @@ createUserConversations = (data, callback) ->
           done!
           if err
             console.error err
+
+          queriesFinished += 1
+          if queriesFinished == data.length
+            callback null
       )
-  callback null
 
 module.exports =
   getConversations: getConversations
