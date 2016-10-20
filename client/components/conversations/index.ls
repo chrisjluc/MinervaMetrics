@@ -16,8 +16,15 @@ class Conversations extends react.Component
       conversations: []
       selectedConvo: -1
       metrics: {}
+    @sendAuthToken!
     setTimeout (~> @getConversations!), 700
 
+
+  sendAuthToken: ~>
+    # options =
+    #   url: "http://127.0.0.1:8000/api/conversations?#{@props.params.authToken}"
+    #   withCredentials: false
+    # request options, (err, resp, body) ~>
 
   getConversations: ~>
     options =
