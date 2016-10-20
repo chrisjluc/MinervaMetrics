@@ -43,7 +43,7 @@ postMessages = (data, callback) ->
       console.error err
       return callback err
     client.query(
-      'INSERT INTO message(message_id, conversation_id, sender_id, text, timestamp) values($1, $2, $3, $4, $5)',
+      'INSERT INTO message(message_id, conversation_id, sender_id, text, timestamp) values($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING',
       data,
       (err, result) ->
         done!

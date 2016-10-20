@@ -33,22 +33,60 @@ getParticipants = (conversationId, callback) ->
     )
 
 createParticipants = (data, callback) ->
+  for d in data
+    pool.acquireClient (err, client, done) ->
+      if err
+        done!
+        console.error err
+        return callback err
+      client.query(
+        'INSERT INTO facebook_user(user_id,name) VALUES($1,$2) ON CONFLICT DO NOTHING',
+        d[1 to 2],
+        (err, result) ->
+          done!
+          if err
+            console.error err
+      )
+  callback null
+  
+createConversations = (data, callback) ->
+
   pool.acquireClient (err, client, done) ->
     if err
       done!
-      console.err err
+      console.error err
       return callback err
     client.query(
-      'INSERT INTO user_conversation(conversation_id,user_id) VALUES($1,$2)',
+      'INSERT INTO conversation(conversation_id) VALUES($1) ON CONFLICT DO NOTHING',
       data,
       (err, result) ->
         done!
         if err
-          console.err err
+          console.error err
         callback null
     )
+
+createUserConversations = (data, callback) ->
+
+  for d in data
+    pool.acquireClient (err, client, done) ->
+      if err
+        done!
+        console.error err
+        return callback err
+      client.query(
+        'INSERT INTO user_conversation(conversation_id,user_id) VALUES($1,$2) ON CONFLICT DO NOTHING',
+        d[0 to 1],
+        (err, result) ->
+          done!
+          if err
+            console.error err
+      )
+  callback null
 
 module.exports =
   getConversations: getConversations
   getParticipants: getParticipants
   createParticipants: createParticipants
+  createConversations: createConversations
+  createUserConversations: createUserConversations
