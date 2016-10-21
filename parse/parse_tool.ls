@@ -16,9 +16,10 @@ insertMessageToDatabase = (messages) ->
 
 
 
-insertParticipantToDatabase = (participants,authToken,convoID) ->
+insertParticipantToDatabase = (participants,userConversations,authToken,convoID) ->
 
   console.log participants
+  console.log userConversations
   messageOptions = 
     host: 'graph.facebook.com'
     path: '/v2.3/' + convoID + '/comments?limit=1000&access_token=' + authToken
@@ -33,10 +34,11 @@ insertParticipantToDatabase = (participants,authToken,convoID) ->
   createConversationsCallback = (err) ->
     if !err
       console.log "createConversationsCallback"
-      conversationDAO.createUserConversations participants, createUserConversationsCallback
+      conversationDAO.createUserConversations userConversations, createUserConversationsCallback
 
   createParticipantsCallback = (err) ->
     if !err 
+
       console.log "createParticipantsCallback" 
       conversationDAO.createConversations [convoID], createConversationsCallback
 
@@ -64,19 +66,25 @@ getConversations = (parsed,authToken) ->
     console.log conversation.to
 
     participants = []
+    userConversations = []
     for participant in conversation.to.data
 
       console.log participant.id
       console.log participant.name
 
       p = [
-        Number convoID
         Number participant.id
         participant.name
       ]
 
+      u = [
+        Number convoID
+        Number participant.id
+      ]
+
       participants.push p
-    insertParticipantToDatabase participants,authToken,convoID
+      userConversations.push u
+    insertParticipantToDatabase participants,userConversations,authToken,convoID
 
 parseMessages = (parsed,convoID) ->
   console.log messages.length

@@ -33,24 +33,27 @@ getParticipants = (conversationId, callback) ->
     )
 
 createParticipants = (data, callback) ->
+  #building the query
+  q = "INSERT INTO facebook_user(user_id,name) VALUES"
+  for d in data
+    q += "(" +d[0]+ ",'" +d[1]+ "'),"
+  q  += ' ON CONFLICT DO NOTHING'
+  q = q.replace('), ', ') ')
+
   pool.acquireClient (err, client, done) ->
-    queriesFinished = 0
-    for d in data
-      if err
+    if err
+      done!
+      console.error err
+      return callback err
+    client.query(
+      q,
+      (err, result) ->
         done!
-        console.error err
-        return callback err
-      client.query(
-        'INSERT INTO facebook_user(user_id,name) VALUES($1,$2) ON CONFLICT DO NOTHING',
-        d[1 to 2],
-        (err, result) ->
-          done!
-          if err
-            console.error err
-          queriesFinished += 1
-          if queriesFinished == data.length
-            callback null
-      )
+        if err
+          console.error err
+
+        callback null
+    )
   
 createConversations = (data, callback) ->
 
@@ -70,26 +73,26 @@ createConversations = (data, callback) ->
     )
 
 createUserConversations = (data, callback) ->
+  #building the query
+  q = 'INSERT INTO user_conversation(conversation_id,user_id) VALUES'
+  for d in data
+    q += "(" +d[0]+ ",'" +d[1]+ "'),"
+  q  += ' ON CONFLICT DO NOTHING'
+  q = q.replace('), ', ') ')
 
   pool.acquireClient (err, client, done) ->
-    queriesFinished = 0
-    for d in data
-      if err
+    if err
+      done!
+      console.error err
+      return callback err
+    client.query(
+      q,
+      (err, result) ->
         done!
-        console.error err
-        return callback err
-      client.query(
-        'INSERT INTO user_conversation(conversation_id,user_id) VALUES($1,$2) ON CONFLICT DO NOTHING',
-        d[0 to 1],
-        (err, result) ->
-          done!
-          if err
-            console.error err
-
-          queriesFinished += 1
-          if queriesFinished == data.length
-            callback null
-      )
+        if err
+          console.error err
+        callback null
+    )
 
 module.exports =
   getConversations: getConversations
