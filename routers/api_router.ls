@@ -28,7 +28,7 @@ apiRouter.get '/analytics/message-count', (req, res) ->
 apiRouter.post '/messages/', messageDAO.postMessages
 
 apiRouter.get '/messages/', (req, res) ->
-  messageDAO.getMessages req.query.conversation_id, (err, result) ->
+  messageDAO.getMessages req.query, (err, result) ->
     if err
       return res.status 500 .json success: false
     res.status 200
