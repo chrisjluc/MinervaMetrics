@@ -20,7 +20,7 @@ insertParticipantToDatabase = (participants,userConversations,authToken,convoID)
 
   console.log participants
   console.log userConversations
-  messageOptions = 
+  messageOptions =
     host: 'graph.facebook.com'
     path: '/v2.3/' + convoID + '/comments?limit=1000&access_token=' + authToken
     method: 'GET'
@@ -30,16 +30,16 @@ insertParticipantToDatabase = (participants,userConversations,authToken,convoID)
     if !err
       console.log "createUserConversationsCallback"
       httpCall parseMessages, messageOptions, convoID
-  
+
   createConversationsCallback = (err) ->
     if !err
       console.log "createConversationsCallback"
       conversationDAO.createUserConversations userConversations, createUserConversationsCallback
 
   createParticipantsCallback = (err) ->
-    if !err 
+    if !err
 
-      console.log "createParticipantsCallback" 
+      console.log "createParticipantsCallback"
       conversationDAO.createConversations [convoID], createConversationsCallback
 
 
@@ -49,7 +49,7 @@ insertParticipantToDatabase = (participants,userConversations,authToken,convoID)
 httpCall = (callback, options, param) ->
   https.get options, (response) ->
     body = ''
-    response.on 'data', (d) -> 
+    response.on 'data', (d) ->
       body += d
     response.on 'end', ->
       parsed = JSON.parse body
@@ -57,7 +57,7 @@ httpCall = (callback, options, param) ->
         console.log parsed.error
       else
         callback parsed, param
-            
+
 
 getConversations = (parsed,authToken) ->
   for conversation in parsed.data
@@ -90,7 +90,7 @@ parseMessages = (parsed,convoID) ->
   console.log messages.length
   if parsed.data.length == 0 or i > thread_limit
     err = true
-    console.log "end" 
+    console.log "end"
     insertMessageToDatabase messages
     return
 
@@ -109,7 +109,7 @@ parseMessages = (parsed,convoID) ->
   httpCall parseMessages, parsed.paging.next, convoID
 
 parseConversation = (authToken) ->
-  inboxOption = 
+  inboxOption =
     host: 'graph.facebook.com'
     path: '/v2.3/me/inbox?fields=to&limit=' + numberOfConversations + '&access_token=' + authToken
     method: 'GET'
