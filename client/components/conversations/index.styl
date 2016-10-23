@@ -9,21 +9,25 @@ $conversations-tab-width = 400px
     text-align: center
     
     input
-      background-color: #f6f7f9
-      border-radius: 3px
-      border-style: none
-      font-size: 14px
-      height: 24px
-      line-height: 24px
-      padding: 0 28px
-      outline: none
-      margin-top: 8px
       width: $conversations-tab-width - 100px
-      box-sizing: border-box
-      text-align: center
-      
-      &:focus::-webkit-input-placeholder
-        color: transparent
+    
+  input
+    background-color: #f6f7f9
+    border-radius: 3px
+    border-style: none
+    font-size: 14px
+    height: 24px
+    line-height: 24px
+    padding: 0 28px
+    outline: none
+    margin-top: 8px
+    width: $conversations-tab-width * 2
+    max-width: 500px
+    box-sizing: border-box
+    text-align: center
+    
+    &:focus::-webkit-input-placeholder
+      color: transparent
     
   .conversations-tab
     width: $conversations-tab-width

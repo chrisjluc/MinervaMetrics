@@ -16,19 +16,26 @@ class Conversations extends react.Component
       conversations: []
       selectedConvo: -1
       metrics: {}
-    @sendAuthToken!
-    setTimeout (~> @getConversations!), 700
 
 
-  sendAuthToken: ~>
-    # options =
-    #   url: "http://127.0.0.1:8000/api/conversations?#{@props.params.authToken}"
-    #   withCredentials: false
-    # request options, (err, resp, body) ~>
+  sendAuthToken: (t) ~>
+    options =
+      method: 'POST'
+      url: 'http://127.0.0.1:8000/api/parse/'
+      body: JSON.stringify token: t
+      headers:
+        "Content-Type": "application/json"
+      withCredentials: false
+
+    request options, (err, resp, body) ~>
+      console.log 'Response:'
+      console.log JSON.stringify body
+    setTimeout (~> @getConversations!), 1000
+
 
   getConversations: ~>
     options =
-      url: "http://127.0.0.1:8000/api/conversations?user_id=1"#{@props.params.userId}"
+      url: "http://127.0.0.1:8000/api/conversations?user_id=#{@props.params.userId}"
       withCredentials: false
     request options, (err, resp, body) ~>
       conversations = JSON.parse body
@@ -81,6 +88,10 @@ class Conversations extends react.Component
     @getMessageFreq i
 
 
+  parse: (k) ~>
+    if k.keyCode is 13 then @sendAuthToken @refs.msgAPIkey.value
+
+
   render: ->
     div className: 'c-conversations',
       div className: 'conversations-tab',
@@ -95,7 +106,9 @@ class Conversations extends react.Component
 
       div className: 'analytics-pane',
         if @state.selectedConvo == -1
-          div className: 'select-a-convo', 'Select a conversation to get started!'
+          div {},
+            div className: 'select-a-convo', 'Select a conversation to get started!'
+            input placeholder: 'Or manually import your FB message key here', onKeyDown: @parse, ref: 'msgAPIkey'
         else if !@state.metrics[@state.selectedConvo]
           button className: 'analyze-button', onClick: (~> @analyze @state.selectedConvo),
             'Analyze!'

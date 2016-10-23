@@ -13,10 +13,10 @@ class HomePage extends react.Component
   
   responseFacebook: (resp) ->
     if !resp.error
+      console.log JSON.stringify resp
       browserHistory.push "/conversations/#{resp.id}"
 
   render: ~>
-    console.log testData.options
     div className: 'c-home-page',
       div className: 'info'
         p {}, ''
@@ -38,7 +38,7 @@ class HomePage extends react.Component
         fields: 'email,name'
         responseHandler: @responseFacebook
         xfbml: true
-        version: 'v2.5'
+        version: 'v2.3'
         class: 'facebook-login'
         buttonText: 'Login With Facebook to analyze your own messages!'
       }

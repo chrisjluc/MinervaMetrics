@@ -54,7 +54,7 @@ httpCall = (callback, options, param) ->
     response.on 'end', ->
       parsed = JSON.parse body
       if parsed.error
-          console.log parsed.error
+        console.log parsed.error
       else
         callback parsed, param
             
