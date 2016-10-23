@@ -73,13 +73,13 @@ getConversations = (parsed,authToken) ->
       console.log participant.name
 
       p = [
-        Number participant.id
+        participant.id
         participant.name
       ]
 
       u = [
-        Number convoID
-        Number participant.id
+        convoID
+        participant.id
       ]
 
       participants.push p
@@ -98,8 +98,8 @@ parseMessages = (parsed,convoID) ->
     sender = comment.from.id
     message = [
       comment.id
-      Number convoID
-      Number sender
+      convoID
+      sender
       comment.message
       comment.created_time
     ]
