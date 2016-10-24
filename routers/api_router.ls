@@ -35,7 +35,9 @@ apiRouter.get '/messages/', (req, res) ->
       ..json result
 
 apiRouter.get '/conversations/', (req, res) ->
+  console.log 'here'
   conversationDAO.getConversations req.query.user_id, (err, result) ->
+    console.log "result: #{JSON.stringify(result)}"
     if err
       return res.status 500 .json success: false
     res.status 200

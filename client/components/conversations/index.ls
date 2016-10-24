@@ -16,9 +16,22 @@ class Conversations extends react.Component
       conversations: []
       selectedConvo: -1
       metrics: {}
+      userId: -1
+
+
+  getUserId: (t) ~>
+    options = 
+      url: "https://graph.facebook.com/v2.3/me?access_token=#{t}"
+      withCredentials: false
+    request options, (err, resp, body) ~>
+      console.log 'FB resp: '
+      console.log JSON.stringify body
+      @setState userId: body.id
+      setTimeout (~> @getConversations!), 1000
 
 
   sendAuthToken: (t) ~>
+    console.log "sending auth token #{t}"
     options =
       method: 'POST'
       url: 'http://127.0.0.1:8000/api/parse/'
@@ -30,14 +43,18 @@ class Conversations extends react.Component
     request options, (err, resp, body) ~>
       console.log 'Response:'
       console.log JSON.stringify body
-    setTimeout (~> @getConversations!), 1000
+      @getUserId t
 
 
   getConversations: ~>
+    console.log "getting convos for #{@state.userId}"
+    if @state.userId is -1
+      return
     options =
-      url: "http://127.0.0.1:8000/api/conversations?user_id=#{@props.params.userId}"
+      url: "http://127.0.0.1:8000/api/conversations?user_id=#{@state.userId}"
       withCredentials: false
     request options, (err, resp, body) ~>
+      console.log "Got response: #{body}"
       conversations = JSON.parse body
       conversations.map (conversation) ~>
         convoOptions =
