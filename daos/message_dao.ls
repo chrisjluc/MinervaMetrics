@@ -36,7 +36,7 @@ getMessages = (query, callback) ->
           console.error err
         callback null result.rows
 
-postMessages = (data, callback) ->
+saveMessages = (data, callback) ->
   pool.acquireClient (err, client, done) ->
     if err
       done!
@@ -69,5 +69,5 @@ getMostRecentMessage = (conversationId, callback) ->
 
 module.exports =
   getMessages: getMessages
-  postMessages: postMessages
+  saveMessages: saveMessages
   getMostRecentMessage: getMostRecentMessage

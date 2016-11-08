@@ -25,7 +25,7 @@ apiRouter.get '/analytics/message-count', (req, res) ->
     res.status 200
       ..json result
 
-apiRouter.post '/messages/', messageDAO.postMessages
+apiRouter.post '/messages/', messageDAO.saveMessages
 
 apiRouter.get '/messages/', (req, res) ->
   messageDAO.getMessages req.query, (err, result) ->
