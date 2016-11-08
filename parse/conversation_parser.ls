@@ -6,7 +6,11 @@ module.exports =
   parseConversation: (authToken) ->
     inboxOption = options.getInboxOptions authToken
 
-    https.get inboxOption, (res) ->
+    https.get inboxOption, (err, res) ->
+      if err
+        console.log err
+        return
+
       for conversation in res.data
         participants = [[participant.id, participant.name] for participant in conversation.to.data]
         userConversations = [[conversation.id, participant.id] for participant in conversation.to.data]

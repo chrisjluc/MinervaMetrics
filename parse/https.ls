@@ -9,6 +9,6 @@ module.exports =
       response.on 'end', ->
         json = JSON.parse data
         if json.error
-          console.log json.error
+          callback json.error, null
         else
-          callback json
+          callback null, json
