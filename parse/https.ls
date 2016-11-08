@@ -1,7 +1,7 @@
 require! https
 
 module.exports =
-  get: (callback, options) ->
+  get: (options, callback) ->
     https.get options, (response) ->
       data = ''
       response.on 'data', (d) ->

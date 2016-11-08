@@ -56,8 +56,7 @@ createParticipants = (data, callback) ->
         callback null
     )
 
-createConversations = (data, callback) ->
-
+createConversation = (data, callback) ->
   pool.acquireClient (err, client, done) ->
     if err
       done!
@@ -102,5 +101,5 @@ module.exports =
   getConversations: getConversations
   getParticipants: getParticipants
   createParticipants: createParticipants
-  createConversations: createConversations
+  createConversation: createConversation
   createUserConversations: createUserConversations
