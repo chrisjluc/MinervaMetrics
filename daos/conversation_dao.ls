@@ -1,4 +1,5 @@
-pool = require '../database/pool.ls'
+pool = require '../database/pool'
+sanitizer = require '../database/sanitizer'
 
 getConversations = (userId, callback) ->
   pool.acquireClient (err, client, done) ->
@@ -36,7 +37,7 @@ createParticipants = (data, callback) ->
   #building the query
   q = "INSERT INTO facebook_user(user_id,name) VALUES"
   for d in data
-    q += "(" +d[0]+ ",'" +d[1]+ "'),"
+    q += "(" + d[0] + ",'" + sanitizer.cleanText(d[1]) + "'),"
   q  += ' ON CONFLICT DO NOTHING'
   q = q.replace('), ', ') ')
 
@@ -54,9 +55,8 @@ createParticipants = (data, callback) ->
 
         callback null
     )
-  
-createConversations = (data, callback) ->
 
+createConversation = (data, callback) ->
   pool.acquireClient (err, client, done) ->
     if err
       done!
@@ -64,7 +64,7 @@ createConversations = (data, callback) ->
       return callback err
     client.query(
       'INSERT INTO conversation(conversation_id) VALUES($1) ON CONFLICT DO NOTHING',
-      data,
+      [data],
       (err, result) ->
         done!
         if err
@@ -84,19 +84,22 @@ createUserConversations = (data, callback) ->
     if err
       done!
       console.error err
-      return callback err
+      if callback
+        callback err
+      return
     client.query(
       q,
       (err, result) ->
         done!
         if err
           console.error err
-        callback null
+        if callback
+          callback null
     )
 
 module.exports =
   getConversations: getConversations
   getParticipants: getParticipants
   createParticipants: createParticipants
-  createConversations: createConversations
+  createConversation: createConversation
   createUserConversations: createUserConversations
