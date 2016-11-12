@@ -1,5 +1,5 @@
 require! express
-parser = require '../parse/parse_tool'
+conversationParser = require '../parse/conversation_parser'
 topWordsAnalytics = require '../analytics/top_words'
 conversationDAO = require '../daos/conversation_dao'
 messageDAO = require '../daos/message_dao'
@@ -9,7 +9,7 @@ messageCountAnalytics = require '../analytics/message_count'
 apiRouter = express.Router!
 
 apiRouter.post '/parse/', (req, res) ->
-  parser.parseConversation req.body.token
+  conversationParser.parseConversation req.body.token
 
 apiRouter.get '/analytics/top-words', (req, res) ->
   topWordsAnalytics.getTopWordsMetric req.query, (err, result) ->
@@ -25,7 +25,7 @@ apiRouter.get '/analytics/message-count', (req, res) ->
     res.status 200
       ..json result
 
-apiRouter.post '/messages/', messageDAO.postMessages
+apiRouter.post '/messages/', messageDAO.saveMessages
 
 apiRouter.get '/messages/', (req, res) ->
   messageDAO.getMessages req.query, (err, result) ->
