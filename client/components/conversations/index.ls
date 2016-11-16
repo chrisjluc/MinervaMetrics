@@ -10,9 +10,9 @@ request = require 'request'
 
 
 class Conversations extends react.Component
-  
+
   ->
-    @state = 
+    @state =
       conversations: []
       selectedConvo: -1
       metrics: {}
@@ -20,7 +20,7 @@ class Conversations extends react.Component
 
 
   getUserId: (t) ~>
-    options = 
+    options =
       url: "https://graph.facebook.com/v2.3/me?access_token=#{t}"
       withCredentials: false
     request options, (err, resp, body) ~>
@@ -97,7 +97,7 @@ class Conversations extends react.Component
 
 
   selectConvo: (i) ~>
-    @setState selectedConvo: i 
+    @setState selectedConvo: i
 
 
   analyze: (i) ~>
@@ -134,7 +134,7 @@ class Conversations extends react.Component
             if @state.metrics[@state.selectedConvo].mostFrequentWords
               MostFrequentWords data: @state.metrics[@state.selectedConvo].mostFrequentWords
             if @state.metrics[@state.selectedConvo].messageFrequency
-              MessageFrequency data: @state.metrics[@state.selectedConvo].messageFrequency  
+              MessageFrequency data: @state.metrics[@state.selectedConvo].messageFrequency
             if @state.metrics[@state.selectedConvo].mostTalkative
               MostTalkative data: @state.metrics[@state.selectedConvo].mostTalkative
             if @state.metrics[@state.selectedConvo].frequentTopics
