@@ -57,9 +57,6 @@ createParticipants = (data, callback) ->
     )
 
 createConversation = (data, callback) ->
-
-  console.log data
-  console.log Date.parse(data[1])/1000
   pool.acquireClient (err, client, done) ->
     if err
       done!
