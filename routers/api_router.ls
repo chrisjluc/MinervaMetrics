@@ -35,13 +35,35 @@ apiRouter.get '/messages/', (req, res) ->
       ..json result
 
 apiRouter.get '/conversations/', (req, res) ->
-  console.log 'here'
-  conversationDAO.getConversations req.query.user_id, (err, result) ->
-    console.log "result: #{JSON.stringify(result)}"
+  conversationList = []
+  conversationDAO.getConversations req.query.user_id, (err, conversations) ->
     if err
       return res.status 500 .json success: false
-    res.status 200
-      ..json result
+    conversationsLeft = conversations.length
+    for conversation in conversations
+      ((id) ->
+        hash = {'conversation_id': id}
+        conversationDAO.getHasUpdates id, (err, hasUpdates) ->
+          if err
+            return res.status 500 .json success: false
+          hash['has_updates'] = hasUpdates
+          conversationDAO.getParticipants id, (err, participants) ->
+            if err
+              return res.status 500 .json success: false
+            hash['participants'] = participants
+            messageDAO.getMostRecentMessage id, (err, message) ->
+              if err
+                return res.status 500 .json success: false
+              hash['latest_time'] = message.timestamp.getTime()
+              messageCountDAO.getTotalMessageCount id, (err, count) ->
+                if err
+                  return res.status 500 .json success: false
+                hash['count'] = count[0]['count']
+                conversationList.push(hash)
+                if --conversationsLeft == 0
+                  res.status 200
+                    ..json conversationList
+      ) conversation.conversation_id
 
 apiRouter.get '/participants/', (req, res) ->
   conversationDAO.getParticipants req.query.conversation_id, (err, result) ->
@@ -49,22 +71,5 @@ apiRouter.get '/participants/', (req, res) ->
       return res.status 500 .json success: false
     res.status 200
       ..json result
-
-apiRouter.get '/conversation-data/', (req, res) ->
-  hash = {}
-  conversationDAO.getParticipants req.query.conversation_id, (err, participants) ->
-    if err
-      return res.status 500 .json success: false
-    hash['participants'] = participants
-    messageDAO.getMostRecentMessage req.query.conversation_id, (err, message) ->
-      if err
-        return res.status 500 .json success: false
-      hash['latest_time'] = message.timestamp.getTime()
-      messageCountDAO.getTotalMessageCount req.query.conversation_id, (err, count) ->
-        if err
-          return res.status 500 .json success: false
-        hash['count'] = count[0]['count']
-        res.status 200
-          ..json hash
 
 module.exports = apiRouter
