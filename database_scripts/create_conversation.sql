@@ -1,5 +1,7 @@
 CREATE TABLE conversation(
-    conversation_id BIGINT NOT NULL PRIMARY KEY
+   conversation_id BIGINT NOT NULL PRIMARY KEY,
+   update_time TIMESTAMP WITH TIME ZONE NOT NULL,
+   new_messages boolean NOT NULL
 );
 
 CREATE TABLE user_conversation(

@@ -2,6 +2,19 @@ conversationDAO = require '../daos/conversation_dao'
 https = require './https'
 options = require './options'
 
+
+createConversationMetaData = (conversation) ->
+  participants = [[participant.id, participant.name] for participant in conversation.to.data]
+  userConversations = [[conversation.id, participant.id] for participant in conversation.to.data]
+  conversationDAO.createParticipants participants, (err) ->
+    if !err
+      conversationDAO.createConversation [conversation.id,conversation.updated_time,true], (err) ->
+        if !err
+          conversationDAO.createUserConversations userConversations, null
+
+                
+
+
 module.exports =
   parseConversation: (authToken) ->
     inboxOption = options.getInboxOptions authToken
@@ -12,10 +25,14 @@ module.exports =
         return
 
       for conversation in res.data
-        participants = [[participant.id, participant.name] for participant in conversation.to.data]
-        userConversations = [[conversation.id, participant.id] for participant in conversation.to.data]
-        conversationDAO.createParticipants participants, (err) ->
-          if !err
-            conversationDAO.createConversation conversation.id, (err) ->
-              if !err
-                conversationDAO.createUserConversations userConversations, null
+        createConversationMetaData conversation
+
+  # parseMessage: (authToken,conversationID) ->
+  #   messageOption = options.getMessageOptions authToken,conversationID
+
+  #   https.get messageOption, (err, res) ->
+  #     if err
+  #       console.log err
+  #       return
+
+  #     for messages in res.data

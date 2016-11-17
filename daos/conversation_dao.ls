@@ -57,14 +57,26 @@ createParticipants = (data, callback) ->
     )
 
 createConversation = (data, callback) ->
+
+  console.log data
+  console.log Date.parse(data[1])/1000
   pool.acquireClient (err, client, done) ->
     if err
       done!
       console.error err
       return callback err
     client.query(
-      'INSERT INTO conversation(conversation_id) VALUES($1) ON CONFLICT DO NOTHING',
-      [data],
+      'INSERT INTO conversation(conversation_id,update_time,new_messages) 
+      VALUES($1,$2,$3)
+      ON CONFLICT(conversation_id) DO 
+      UPDATE SET new_messages = 
+      CASE 
+      WHEN conversation.update_time <> excluded.update_time 
+      THEN true 
+      ELSE false 
+      END 
+      ,update_time = excluded.update_time',
+      data,
       (err, result) ->
         done!
         if err
