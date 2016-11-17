@@ -36,6 +36,7 @@
     "webpack-dev-middleware": "^1.6.1"
   },
   "dependencies": {
+    "async": "^2.1.2",
     "body-parser": "^1.15.2",
     "chart.js": "^1.1.1",
     "cors": "^2.8.1",
@@ -43,6 +44,7 @@
     "pg": "^6.1.0",
     "react-chartjs-2": "^1.4.0",
     "react-facebook-login-component": "^0.6.0",
-    "request": "^2.75.0"
+    "request": "^2.75.0",
+    "underscore": "^1.8.3"
   }
 }
