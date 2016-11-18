@@ -2,10 +2,15 @@ host = 'graph.facebook.com'
 version = '/v2.3/'
 
 module.exports =
-  getMessageOptions: (conversationId, authToken) ->
+  getMessageOptions: (authToken, conversationId) ->
     options =
       host: host
       path: version + conversationId + '/comments?access_token=' + authToken
+
+  getMessageSinceOptions: (authToken, conversationId, lastUpdatedTime) ->
+    options =
+      host: host
+      path: version + conversationId + '/comments?since=' + Date.parse(lastUpdatedTime)/1000  +'access_token=' + authToken
 
   getInboxOptions: (authToken) ->
     options =

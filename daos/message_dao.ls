@@ -37,6 +37,7 @@ getMessages = (query, callback) ->
         callback null result.rows
 
 saveMessages = (data, callback) ->
+
   pool.acquireClient (err, client, done) ->
     if err
       done!
@@ -49,8 +50,10 @@ saveMessages = (data, callback) ->
         done!
         if err
           console.error err
-        callback null
+        if callback
+          callback null
     )
+    
 getMostRecentMessage = (conversationId, callback) ->
   pool.acquireClient (err, client, done) ->
     if err
