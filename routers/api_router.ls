@@ -7,6 +7,7 @@ messageDAO = require '../daos/message_dao'
 messageCountDAO = require '../daos/message_count_dao'
 messageCountAnalytics = require '../analytics/message_count'
 topicsAnalytics = require '../analytics/topics'
+emotionsAnalytics = require '../analytics/emotions'
 
 apiRouter = express.Router!
 
@@ -29,6 +30,13 @@ apiRouter.get '/analytics/message-count', (req, res) ->
 
 apiRouter.get '/analytics/topics', (req, res) ->
   topicsAnalytics.getTopicsMetric req.query, (err, result) ->
+    if err
+      return res.status 500 .json success: false
+    res.status 200
+      ..json result
+
+apiRouter.get '/analytics/emotions', (req, res) ->
+  emotionsAnalytics.getEmotionsMetric req.query, (err, result) ->
     if err
       return res.status 500 .json success: false
     res.status 200

@@ -2,7 +2,7 @@ messageDAO = require '../daos/message_dao'
 indico = require './indico'
 
 module.exports =
-  getTopicsMetric: (query, callback) ->
+  getEmotionsMetric: (query, callback) ->
     messageDAO.getMessages query, (err, messages) ->
       if err
         console.error err
@@ -12,7 +12,7 @@ module.exports =
         obj.text
       .join ' '
 
-      indico.getTopics text,
+      indico.getEmotions text,
         (topics) ->
           topics = [{topic: topic.replace(/_/g, ' '), score: score} for topic, score of topics]
           topics.sort (a, b) ->
