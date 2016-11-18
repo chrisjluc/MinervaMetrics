@@ -12,9 +12,6 @@ createConversationMetaData = (conversation) ->
         if !err
           conversationDAO.createUserConversations userConversations, null
 
-                
-
-
 module.exports =
   parseConversation: (authToken) ->
     inboxOption = options.getInboxOptions authToken
@@ -27,12 +24,3 @@ module.exports =
       for conversation in res.data
         createConversationMetaData conversation
 
-  # parseMessage: (authToken,conversationID) ->
-  #   messageOption = options.getMessageOptions authToken,conversationID
-
-  #   https.get messageOption, (err, res) ->
-  #     if err
-  #       console.log err
-  #       return
-
-  #     for messages in res.data
