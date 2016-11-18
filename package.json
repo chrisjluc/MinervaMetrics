@@ -36,6 +36,7 @@
     "webpack-dev-middleware": "^1.6.1"
   },
   "dependencies": {
+    "async": "^2.1.2",
     "body-parser": "^1.15.2",
     "chart.js": "^1.1.1",
     "config": "^1.24.0",
