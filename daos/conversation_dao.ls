@@ -33,6 +33,22 @@ getParticipants = (conversationId, callback) ->
         callback null result.rows
     )
 
+getHasUpdates = (conversationId, callback) ->
+  pool.acquireClient (err, client, done) ->
+    if err
+      done!
+      console.log err
+      return callback err null
+    client.query(
+      'SELECT has_new_messages FROM conversation WHERE conversation_id = $1',
+      [conversationId],
+      (err, result) ->
+        done!
+        if err
+          console.error err
+        callback null result.rows[0]['has_new_messages']
+    )
+
 createParticipants = (data, callback) ->
   #building the query
   q = "INSERT INTO facebook_user(user_id,name) VALUES"
@@ -107,6 +123,7 @@ createUserConversations = (data, callback) ->
 module.exports =
   getConversations: getConversations
   getParticipants: getParticipants
+  getHasUpdates: getHasUpdates
   createParticipants: createParticipants
   createConversation: createConversation
   createUserConversations: createUserConversations
