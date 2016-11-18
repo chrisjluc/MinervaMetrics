@@ -2,7 +2,7 @@ messageDAO = require '../daos/message_dao'
 indico = require './indico'
 
 module.exports =
-  getEmotionsMetric: (query, callback) ->
+  getPoliticalLeaningsMetric: (query, callback) ->
     messageDAO.getMessages query, (err, messages) ->
       if err
         console.error err
@@ -12,12 +12,12 @@ module.exports =
         obj.text
       .join ' '
 
-      indico.getEmotions text,
-        (emotions) ->
-          emotions = [{emotion: emotion, score: score} for emotion, score of emotions]
-          emotions.sort (a, b) ->
+      indico.getPoliticLeanings text,
+        (politicalLeanings) ->
+          politicalLeanings = [{political_leaning: p, score: score} for p, score of politicalLeanings]
+          politicalLeanings.sort (a, b) ->
             b.score - a.score
-          callback null, emotions
+          callback null, politicalLeanings
         (err) ->
           console.error err
           callback err, null

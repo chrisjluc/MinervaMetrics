@@ -14,3 +14,8 @@ module.exports =
     indico.emotion text
       .then success
       .catch error
+
+  getPoliticLeanings: (text, success, error) ->
+    indico.political text
+      .then success
+      .catch error
