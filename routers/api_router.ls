@@ -1,6 +1,5 @@
 require! express
 async = require 'async'
-_ = require 'underscore'
 conversationParser = require '../parse/conversation_parser'
 topWordsAnalytics = require '../analytics/top_words'
 conversationDAO = require '../daos/conversation_dao'
@@ -41,7 +40,9 @@ apiRouter.get '/conversations/', (req, res) ->
   conversationDAO.getConversations req.query.user_id, (err, conversations) ->
     if err
       return res.status 500 .json success: false
-    async.each (_.pluck conversations, 'conversation_id'), ((id, callback) ->
+    async.each (conversations.map ((conversation) ->
+      conversation.'conversation_id'
+      )), ((id, callback) ->
       hash = {'conversation_id': id}
       conversationDAO.getHasUpdates id, (err, hasUpdates) ->
         if err

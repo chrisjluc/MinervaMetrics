@@ -44,7 +44,6 @@
     "pg": "^6.1.0",
     "react-chartjs-2": "^1.4.0",
     "react-facebook-login-component": "^0.6.0",
-    "request": "^2.75.0",
-    "underscore": "^1.8.3"
+    "request": "^2.75.0"
   }
 }
