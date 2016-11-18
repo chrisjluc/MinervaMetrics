@@ -8,7 +8,7 @@ createConversationMetaData = (conversation) ->
   userConversations = [[conversation.id, participant.id] for participant in conversation.to.data]
   conversationDAO.createParticipants participants, (err) ->
     if !err
-      conversationDAO.createConversation [conversation.id,conversation.updated_time,true], (err) ->
+      conversationDAO.createConversation [conversation.id,conversation.updated_time], (err) ->
         if !err
           conversationDAO.createUserConversations userConversations, null
 

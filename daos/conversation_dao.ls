@@ -63,16 +63,14 @@ createConversation = (data, callback) ->
       console.error err
       return callback err
     client.query(
-      'INSERT INTO conversation(conversation_id,update_time,new_messages) 
-      VALUES($1,$2,$3)
-      ON CONFLICT(conversation_id) DO 
-      UPDATE SET new_messages = 
-      CASE 
-      WHEN conversation.update_time <> excluded.update_time 
-      THEN true 
-      ELSE false 
-      END 
-      ,update_time = excluded.update_time',
+      'INSERT INTO conversation(conversation_id, last_updated_time) VALUES($1,$2)
+        ON CONFLICT(conversation_id) DO 
+          UPDATE SET has_new_messages = 
+            CASE 
+              WHEN conversation.last_updated_time <> excluded.last_updated_time THEN true 
+              ELSE false 
+            END 
+      ,last_updated_time = excluded.last_updated_time',
       data,
       (err, result) ->
         done!
