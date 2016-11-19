@@ -20,13 +20,15 @@ class Conversations extends react.Component
 
 
   getUserId: (t) ~>
+    console.log 'getting user id'
     options =
       url: "https://graph.facebook.com/v2.3/me?access_token=#{t}"
       withCredentials: false
     request options, (err, resp, body) ~>
       console.log 'FB resp: '
-      console.log JSON.stringify body
-      @setState userId: body.id
+      console.log body
+      console.log "id: #{JSON.parse(body).id}"
+      @setState userId: JSON.parse(body).id
       setTimeout (~> @getConversations!), 1000
 
 
@@ -40,10 +42,9 @@ class Conversations extends react.Component
         "Content-Type": "application/json"
       withCredentials: false
 
-    request options, (err, resp, body) ~>
-      console.log 'Response:'
-      console.log JSON.stringify body
-      @getUserId t
+    request options, (err, resp, body) ->
+    @getUserId t
+
 
 
   getConversations: ~>
