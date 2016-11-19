@@ -2,19 +2,16 @@ messageDAO = require '../daos/message_dao'
 https = require './https'
 options = require './options'
 
-threadLimit = 5
-i = 0 
-
 createMessages = (messages) ->
   for message in messages
     messageDAO.saveMessages message, null
 
-fetchMessages = (messageOption, conversationId) ->
+fetchMessages = (messageOption, conversationId, threadCount) ->
   https.get messageOption, (err, res) ->
     if err
       console.log err
       return
-    if res.data.length == 0 or i > threadLimit
+    if res.data.length == 0 or threadCount <= 0
       console.log "end"
       return
 
@@ -24,10 +21,10 @@ fetchMessages = (messageOption, conversationId) ->
     fetchMessages res.paging.next, conversationId
 
 module.exports =
-  parseMessages: (authToken,conversationId) ->
+  parseMessages: (authToken, conversationId) ->
     messageOption = options.getMessageOptions authToken, conversationId
-    fetchMessages messageOption, conversationId
+    fetchMessages messageOption, conversationId, 50
 
-  parseMessagesSince: (authToken,conversationId,lastUpdatedTime) ->
+  parseMessagesSince: (authToken, conversationId, lastUpdatedTime) ->
     messageOption = options.getMessageSinceOptions authToken, conversationId, lastUpdatedTime
-    fetchMessages messageOption, conversationId
+    fetchMessages messageOption, conversationId, 50
