@@ -10,4 +10,4 @@ module.exports =
   getInboxOptions: (authToken) ->
     options =
       host: host
-      path: version + 'me/inbox?fields=to&limit=50&access_token=' + authToken
+      path: version + 'me/inbox?fields=to,updated_time&limit=50&access_token=' + authToken
