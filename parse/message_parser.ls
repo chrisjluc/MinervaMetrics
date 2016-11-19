@@ -17,8 +17,7 @@ fetchMessages = (messageOption, conversationId, threadCount) ->
 
     messages = [[m.id, conversationId, m.from.id, m.message, m.created_time] for m in res.data]
     createMessages messages
-    i += 1
-    fetchMessages res.paging.next, conversationId
+    fetchMessages res.paging.next, conversationId, (threadCount - 1)
 
 module.exports =
   parseMessages: (authToken, conversationId) ->
