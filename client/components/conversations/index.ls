@@ -19,6 +19,11 @@ class Conversations extends react.Component
       selectedConvo: -1
       currentConvo: {}
       metrics: {}
+      mostFrequentWords: {}
+      messageFrequency: {}
+      emotions: {}
+      topics: {}
+      politics: {}
       userId: -1
       apiKey: ''
 
@@ -134,10 +139,10 @@ class Conversations extends react.Component
 
 
   selectConvo: (i) ~>
+    @analyze i
     @setState selectedConvo: i
     for convo in @state.conversations
       if convo.conversation_id is i
-        console.log 'found'
         @setState currentConvo: convo
 
 
@@ -190,19 +195,20 @@ class Conversations extends react.Component
           div {},
             div className: 'conversation-title',
               'Conversation with ' + @state.currentConvo.participants.map (p, i) ~> " #{p.name}"
-            button className: 'refresh-messages', 'Refresh Analytics'
-            if @state.metrics[@state.selectedConvo].mostFrequentWords
+            button {className: 'refresh-messages', onClick: ~> @analyze @state.selectedConvo},
+              'Refresh Analytics'
+            if Object.keys(@state.metrics[@state.selectedConvo].mostFrequentWords).length > 0
               MostFrequentWords data: @state.metrics[@state.selectedConvo].mostFrequentWords
-            if @state.metrics[@state.selectedConvo].messageFrequency
+            if Object.keys(@state.metrics[@state.selectedConvo].messageFrequency).length > 0
               MessageFrequency data: @state.metrics[@state.selectedConvo].messageFrequency
-            if @state.metrics[@state.selectedConvo].emotions
+            if Object.keys(@state.metrics[@state.selectedConvo].emotions).length > 0
               Emotions data: @state.metrics[@state.selectedConvo].emotions
-            if @state.metrics[@state.selectedConvo].politics
+            if Object.keys(@state.metrics[@state.selectedConvo].politics).length > 0
               Politics data: @state.metrics[@state.selectedConvo].politics
-            if @state.metrics[@state.selectedConvo].topics
+            if Object.keys(@state.metrics[@state.selectedConvo].topics).length > 0
               FrequentTopics data: @state.metrics[@state.selectedConvo].topics
-            if @state.metrics[@state.selectedConvo].mostTalkative
-              MostTalkative data: @state.metrics[@state.selectedConvo].mostTalkative
+            # if Object.keys(@state.metrics[@state.selectedConvo].mostTalkative).length > 0
+            #   MostTalkative data: @state.metrics[@state.selectedConvo].mostTalkative
 
 
 
