@@ -58,7 +58,6 @@ class Conversations extends react.Component
       withCredentials: false
     request options, (err, resp, body) ~>
       conversations = JSON.parse body
-      console.log conversations
       @setState conversations: conversations
 
 
@@ -121,6 +120,7 @@ class Conversations extends react.Component
           Conversation {
             key: i
             conversation: conversation
+            userId: @state.userId
             onClick: ~> @selectConvo conversation.conversation_id
           }
 
