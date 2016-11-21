@@ -79,7 +79,8 @@ apiRouter.get '/conversations/', (req, res) ->
           messageDAO.getMostRecentMessage id, (err, message) ->
             if err
               callback 500
-            hash['latest_time'] = message.timestamp.getTime()
+            # Temp fix, take out if message later
+            if message then hash['latest_time'] = message.timestamp.getTime()
             messageCountDAO.getTotalMessageCount id, (err, count) ->
               if err
                 callback 500

@@ -55,18 +55,9 @@ class Conversations extends react.Component
       url: "http://127.0.0.1:8000/api/conversations?user_id=#{@state.userId}"
       withCredentials: false
     request options, (err, resp, body) ~>
-      console.log "Got response: #{body}"
       conversations = JSON.parse body
-      conversations.map (conversation) ~>
-        convoOptions =
-          url: "http://127.0.0.1:8000/api/conversation-data?conversation_id=#{conversation.conversation_id}"
-          withCredentials: false
-        request convoOptions, (cErr, cResp, cBody) ~>
-          convo = JSON.parse cBody
-          convo.conversation_id = conversation.conversation_id
-          prevConvos = @state.conversations
-          prevConvos.push convo
-          @setState conversations: prevConvos
+      console.log conversations
+      @setState conversations: conversations
 
 
   getTopWords: (i) ~>
