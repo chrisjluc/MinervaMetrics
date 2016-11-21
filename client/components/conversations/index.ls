@@ -6,6 +6,7 @@ MostFrequentWords = react.createFactory require '../metrics/most_frequent_words'
 MessageFrequency = react.createFactory require '../metrics/message_frequency'
 FrequentTopics = react.createFactory require '../metrics/frequent_topics'
 Emotions = react.createFactory require '../metrics/emotions'
+Politics = react.createFactory require '../metrics/politics'
 Conversation = react.createFactory require './conversation'
 request = require 'request'
 
@@ -48,7 +49,6 @@ class Conversations extends react.Component
 
     request options, (err, resp, body) ->
     @getUserId t
-
 
 
   getConversations: ~>
@@ -119,6 +119,20 @@ class Conversations extends react.Component
       @setState metrics: metrics
 
 
+  getPolitics: (i) ~>
+    options =
+      url: "http://127.0.0.1:8000/api/analytics/political-leanings?conversation_id=#{i}"
+      withCredentials: false
+    request options, (err, resp, body) ~>
+      metrics = @state.metrics
+      if metrics[i]
+        metrics[i].politics = JSON.parse body
+      else
+        metrics[i] =
+          politics: JSON.parse body
+      @setState metrics: metrics
+
+
   selectConvo: (i) ~>
     @setState selectedConvo: i
     for convo in @state.conversations
@@ -141,6 +155,7 @@ class Conversations extends react.Component
     setTimeout (~> @getMessageFreq i), 1000
     setTimeout (~> @getEmotions i), 1000
     setTimeout (~> @getTopics i), 1000
+    setTimeout (~> @getPolitics i), 1000
 
 
   parse: (k) ~>
@@ -168,7 +183,7 @@ class Conversations extends react.Component
         else if !@state.metrics[@state.selectedConvo]
           div {},
             div className: 'conversation-title',
-              'Conversation with ' + @state.currentConvo.participants.map (p, i) ~> " #{p.name}"
+              'Conversation between ' + @state.currentConvo.participants.map (p, i) ~> " #{p.name}"
             button className: 'analyze-button', onClick: (~> @analyze @state.selectedConvo),
               'Analyze!'
         else
@@ -182,6 +197,8 @@ class Conversations extends react.Component
               MessageFrequency data: @state.metrics[@state.selectedConvo].messageFrequency
             if @state.metrics[@state.selectedConvo].emotions
               Emotions data: @state.metrics[@state.selectedConvo].emotions
+            if @state.metrics[@state.selectedConvo].politics
+              Politics data: @state.metrics[@state.selectedConvo].politics
             if @state.metrics[@state.selectedConvo].topics
               FrequentTopics data: @state.metrics[@state.selectedConvo].topics
             if @state.metrics[@state.selectedConvo].mostTalkative
