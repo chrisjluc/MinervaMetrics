@@ -13,7 +13,7 @@ class MessageFrequency extends react.Component
       LineChart {
         className: 'chart'
         data:
-          labels: @props.data.map (msg) -> months[new Date msg.timestamp .getMonth!]
+          labels: @props.data.slice(0,11).map (msg) -> months[new Date msg.timestamp .getMonth!]
           datasets: [
             * label: '# Messages'
               fill: false
@@ -33,7 +33,7 @@ class MessageFrequency extends react.Component
               pointHoverBorderWidth: 2
               pointRadius: 1
               pointHitRadius: 10
-              data: @props.data.map (msg) -> msg.count
+              data: @props.data.slice(0,11).map (msg) -> msg.count
               spanGaps: false
           ]
       }

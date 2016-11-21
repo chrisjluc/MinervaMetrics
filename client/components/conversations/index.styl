@@ -6,7 +6,10 @@ $conversations-tab-width = 500px
   .search
     height: 40px
     border-bottom: 1px solid #b2b2b2
+    border-right: 1px solid #b2b2b2
     text-align: center
+    right: -1px
+    position: relative
 
     input
       width: $conversations-tab-width - 100px
@@ -31,13 +34,24 @@ $conversations-tab-width = 500px
 
   .conversations-tab
     width: $conversations-tab-width
-    border-right: 1px solid #b2b2b2
     display: inline-block
     box-sizing: border-box
     position: absolute
     height: calc(100% - 100px)
 
   .analytics-pane
+    .c-emotions
+      margin: 30px 30px 30px 30px
+
+    .c-most-freq-words
+      margin: 30px 30px 30px 30px
+
+    .c-most-talkative
+      margin: 30px 30px 30px 30px
+
+    .c-messages-freq
+      margin: 30px 30px 30px 30px
+
     display: inline-block
     width: calc(100% - 400px)
     vertical-align: top
@@ -61,3 +75,22 @@ $conversations-tab-width = 500px
 
       &:hover
         cursor: pointer
+
+    .refresh-messages
+      background: #0084ff
+      padding: 0px 30px
+      font-size: 25px
+      color: #fff
+      height: 100px
+      border: none
+      display: block
+      margin: 0 auto
+      width: 500px
+      &:focus
+        outline: none
+      &:hover
+        cursor: pointer
+
+    .conversation-title
+      margin-bottom: 20px
+      display: block

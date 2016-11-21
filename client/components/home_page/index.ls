@@ -10,7 +10,7 @@ MostTalkative = react.createFactory require '../metrics/most_talkative'
 Emotions = react.createFactory require '../metrics/emotions'
 
 class HomePage extends react.Component
-  
+
   responseFacebook: (resp) ->
     if !resp.error
       console.log JSON.stringify resp
@@ -20,17 +20,13 @@ class HomePage extends react.Component
     div className: 'c-home-page',
       div className: 'info'
         p {}, ''
-      # div className: 'description',
-      #   p {},
-      #     '''
-      #     '''
       div className: 'backdrop',
         MostFrequentWords data: testData.topWordsData
-        Emotions {}
+        Emotions data: testData.emotionsData
         MostTalkative {}
         MessageFrequency data: testData.messageCountData
-        FrequentTopics style: {height: '400px'}
-        
+        FrequentTopics style: {height: '400px'}, data: testData.topicsData
+
       FacebookLogin {
         socialId: '361098944231495'
         language: 'en_US'
@@ -80,6 +76,29 @@ class HomePage extends react.Component
         count: 40
       * timestamp: 1472702400000 - 11*2592000000
         count: 55
+    emotionsData:
+      * emotion: 'Happy'
+        score: 100
+      * emotion: 'Sad'
+        score: 10
+      * emotion: 'Angry'
+        score: 20
+      * emotion: 'Silly'
+        score: 75
+      * emotion: 'Nervous'
+        score: 40
+    topicsData:
+      * topic: 'Sports'
+        score: 50
+      * topic: 'School'
+        score: 80
+      * topic: 'Gaming'
+        score: 20
+      * topic: 'Work'
+        score: 75
+      * topic: 'Music'
+        score: 60
+
 
 
 module.exports = HomePage

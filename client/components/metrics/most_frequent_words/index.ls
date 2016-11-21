@@ -14,10 +14,10 @@ class MostFrequentWords extends react.Component
       BarChart {
         className: 'chart'
         data:
-          labels: @props.data.slice(1,5).map (wordInfo) -> wordInfo.word
+          labels: @props.data.slice(0,5).map (wordInfo) -> wordInfo.word
           datasets: [
             * label: 'Word Count'
-              data: @props.data.slice(1,5).map (wordInfo) -> wordInfo.count
+              data: @props.data.slice(0,5).map (wordInfo) -> wordInfo.count
               backgroundColor: 'rgba(0,132,255, 0.4)'
               borderColor: 'rgba(0,132,255, 0.4)'
               hoverBackgroundColor: 'rgba(0,132,255, 0.8)'

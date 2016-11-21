@@ -5,6 +5,7 @@ browserHistory = require 'react-router/lib/browserHistory'
 MostFrequentWords = react.createFactory require '../metrics/most_frequent_words'
 MessageFrequency = react.createFactory require '../metrics/message_frequency'
 FrequentTopics = react.createFactory require '../metrics/frequent_topics'
+Emotions = react.createFactory require '../metrics/emotions'
 Conversation = react.createFactory require './conversation'
 request = require 'request'
 
@@ -15,6 +16,7 @@ class Conversations extends react.Component
     @state =
       conversations: []
       selectedConvo: -1
+      currentConvo: {}
       metrics: {}
       userId: -1
       apiKey: ''
@@ -89,8 +91,40 @@ class Conversations extends react.Component
       @setState metrics: metrics
 
 
+  getEmotions: (i) ~>
+    options =
+      url: "http://127.0.0.1:8000/api/analytics/emotions?conversation_id=#{i}"
+      withCredentials: false
+    request options, (err, resp, body) ~>
+      metrics = @state.metrics
+      if metrics[i]
+        metrics[i].emotions = JSON.parse body
+      else
+        metrics[i] =
+          emotions: JSON.parse body
+      @setState metrics: metrics
+
+
+  getTopics: (i) ~>
+    options =
+      url: "http://127.0.0.1:8000/api/analytics/topics?conversation_id=#{i}"
+      withCredentials: false
+    request options, (err, resp, body) ~>
+      metrics = @state.metrics
+      if metrics[i]
+        metrics[i].topics = JSON.parse body
+      else
+        metrics[i] =
+          topics: JSON.parse body
+      @setState metrics: metrics
+
+
   selectConvo: (i) ~>
     @setState selectedConvo: i
+    for convo in @state.conversations
+      if convo.conversation_id is i
+        console.log 'found'
+        @setState currentConvo: convo
 
 
   analyze: (i) ~>
@@ -105,15 +139,17 @@ class Conversations extends react.Component
     request options, (err, resp, body) ->
     setTimeout (~> @getTopWords i), 1000
     setTimeout (~> @getMessageFreq i), 1000
+    setTimeout (~> @getEmotions i), 1000
+    setTimeout (~> @getTopics i), 1000
 
 
   parse: (k) ~>
     if k.keyCode is 13 then @sendAuthToken @refs.msgAPIkey.value
 
 
-  render: ->
+  render: ~>
     div className: 'c-conversations',
-      div className: 'conversations-tab',
+      div className: 'conversations-tab', style: { borderRight: "#{if @state.selectedConvo != -1 then 'none' else '1px solid #b2b2b2'}" },
         div className: 'search',
           input placeholder: 'Search for conversations'
         @state.conversations.map (conversation, i) ~>
@@ -130,18 +166,27 @@ class Conversations extends react.Component
             div className: 'select-a-convo', 'Select a conversation to get started!'
             input placeholder: 'Or manually import your FB message key here', onKeyDown: @parse, ref: 'msgAPIkey'
         else if !@state.metrics[@state.selectedConvo]
-          button className: 'analyze-button', onClick: (~> @analyze @state.selectedConvo),
-            'Analyze!'
+          div {},
+            div className: 'conversation-title',
+              'Conversation with ' + @state.currentConvo.participants.map (p, i) ~> " #{p.name}"
+            button className: 'analyze-button', onClick: (~> @analyze @state.selectedConvo),
+              'Analyze!'
         else
           div {},
+            div className: 'conversation-title',
+              'Conversation with ' + @state.currentConvo.participants.map (p, i) ~> " #{p.name}"
+            button className: 'refresh-messages', 'Refresh Analytics'
             if @state.metrics[@state.selectedConvo].mostFrequentWords
               MostFrequentWords data: @state.metrics[@state.selectedConvo].mostFrequentWords
             if @state.metrics[@state.selectedConvo].messageFrequency
               MessageFrequency data: @state.metrics[@state.selectedConvo].messageFrequency
+            if @state.metrics[@state.selectedConvo].emotions
+              Emotions data: @state.metrics[@state.selectedConvo].emotions
+            if @state.metrics[@state.selectedConvo].topics
+              FrequentTopics data: @state.metrics[@state.selectedConvo].topics
             if @state.metrics[@state.selectedConvo].mostTalkative
               MostTalkative data: @state.metrics[@state.selectedConvo].mostTalkative
-            if @state.metrics[@state.selectedConvo].frequentTopics
-              FrequentTopics {}
+
 
 
 module.exports = Conversations
