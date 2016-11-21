@@ -17,7 +17,7 @@ apiRouter.post '/parse/', (req, res) ->
   conversationParser.parseConversation req.body.token
 
 apiRouter.post '/parseMessages/', (req, res) ->
-  messageParser.parseMessages req.body.token, req.body.conversationId  
+  messageParser.parseMessages req.body.token, req.body.conversationId
 
 apiRouter.get '/analytics/top-words', (req, res) ->
   topWordsAnalytics.getTopWordsMetric req.query, (err, result) ->
@@ -83,8 +83,7 @@ apiRouter.get '/conversations/', (req, res) ->
           messageDAO.getMostRecentMessage id, (err, message) ->
             if err
               callback 500
-            # Temp fix, take out if message later
-            if message then hash['latest_time'] = message.timestamp.getTime()
+            hash['latest_time'] = message.timestamp.getTime()
             messageCountDAO.getTotalMessageCount id, (err, count) ->
               if err
                 callback 500

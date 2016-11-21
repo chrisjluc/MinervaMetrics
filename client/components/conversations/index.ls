@@ -17,6 +17,7 @@ class Conversations extends react.Component
       selectedConvo: -1
       metrics: {}
       userId: -1
+      apiKey: ''
 
 
   getUserId: (t) ~>
@@ -33,6 +34,7 @@ class Conversations extends react.Component
 
 
   sendAuthToken: (t) ~>
+    @setState apiKey: t
     console.log "sending auth token #{t}"
     options =
       method: 'POST'
@@ -93,8 +95,19 @@ class Conversations extends react.Component
 
 
   analyze: (i) ~>
-    @getTopWords i
-    @getMessageFreq i
+    console.log "analyzing convo #{i}"
+    options =
+      url: 'http://127.0.0.1:8000/api/parseMessages/'
+      withCredentials: false
+      method: 'POST'
+      body: JSON.stringify token: @state.apiKey, conversationId: i
+      headers:
+        "Content-Type": "application/json"
+    request options, (err, resp, body) ->
+    setTimeout (~> @getTopWords i), 1000
+    setTimeout (~> @getMessageFreq i), 1000
+    # @getTopWords i
+    # @getMessageFreq i
 
 
   parse: (k) ~>
