@@ -9,6 +9,8 @@ module.exports =
         return callback err, null
 
       text = messages.map (obj) ->
+        if obj.txt == null
+          return ''
         obj.text
       .join ' '
 

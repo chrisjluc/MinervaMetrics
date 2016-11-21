@@ -21,6 +21,8 @@ getTopWordsMetric = (query, callback) ->
 
     wordCounts = new Map!
     for message in messages
+      if message.text == null
+        continue
       text = message.text .toLowerCase!
       words = textSanitizer.removePunctuation text .split ' '
       words = textSanitizer.removeSingleLetterWords textSanitizer.removeStopWords words
