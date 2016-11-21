@@ -8,8 +8,10 @@ module.exports =
         console.error err
         return callback err, null
 
-      text = messages.map (obj) ->
-        obj.text
+      text = messages.filter (message) ->
+        message.text != null
+      .map (message) ->
+        message.text
       .join ' '
 
       indico.getTopics text,
