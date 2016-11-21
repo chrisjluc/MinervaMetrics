@@ -7,11 +7,15 @@ createMessages = (messages) ->
     messageDAO.saveMessages message, null
 
 fetchMessages = (messageOption, conversationId, threadCount) ->
+  if threadCount <= 0
+    console.log "end"
+    return
+
   https.get messageOption, (err, res) ->
     if err
       console.log err
       return
-    if res.data.length == 0 or threadCount <= 0
+    if res.data.length == 0
       console.log "end"
       return
 
