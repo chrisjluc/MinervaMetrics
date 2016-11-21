@@ -81,16 +81,12 @@ apiRouter.get '/conversations/', (req, res) ->
           if err
             callback 500
           hash['participants'] = participants
-          messageDAO.getMostRecentMessage id, (err, message) ->
+          messageCountDAO.getTotalMessageCount id, (err, count) ->
             if err
               callback 500
-            hash['latest_time'] = message.timestamp.getTime()
-            messageCountDAO.getTotalMessageCount id, (err, count) ->
-              if err
-                callback 500
-              hash['count'] = count[0]['count']
-              conversationList.push(hash)
-              callback null
+            hash['count'] = count[0]['count']
+            conversationList.push(hash)
+            callback null
     ), (err) ->
       if err
         return res.status err .json success: false

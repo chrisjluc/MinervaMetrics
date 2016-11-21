@@ -4,10 +4,11 @@ react = require 'react'
 
 class Conversation extends react.Component
   render: ~>
+    console.log @props.conversation.latest_time
+    console.log @props.conversation.count
     date = new Date @props.conversation.latest_time
     div className: 'c-conversation', onClick: @props.onClick,
       div className: 'avatar', style: backgroundImage: "url(\"http://graph.facebook.com/#{@props.conversation.participants[0].user_id}/picture?type=square\")"
-        # @props.conversation.participants[0].name[0]
       div className: 'conversation-summary',
         span className: 'name',
           if @props.conversation.participants.length > 1
