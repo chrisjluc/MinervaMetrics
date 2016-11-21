@@ -17,7 +17,7 @@ apiRouter.post '/parse/', (req, res) ->
   conversationParser.parseConversation req.body.token
 
 apiRouter.post '/parseMessages/', (req, res) ->
-  messageParser.parseMessages req.body.token, req.body.conversationId  
+  messageParser.parseMessages req.body.token, req.body.conversationId
 
 apiRouter.get '/analytics/top-words', (req, res) ->
   topWordsAnalytics.getTopWordsMetric req.query, (err, result) ->
@@ -72,10 +72,11 @@ apiRouter.get '/conversations/', (req, res) ->
       conversation.'conversation_id'
       )), ((id, callback) ->
       hash = {'conversation_id': id}
-      conversationDAO.getHasUpdates id, (err, hasUpdates) ->
+      conversationDAO.getMetaData id, (err, metaData) ->
         if err
           callback 500
-        hash['has_updates'] = hasUpdates
+        hash['has_updates'] = metaData['has_new_messages']
+        hash['latest_time'] = metaData['last_updated_time']
         conversationDAO.getParticipants id, (err, participants) ->
           if err
             callback 500
