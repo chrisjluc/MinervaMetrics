@@ -1,7 +1,7 @@
 require './index.styl'
 react = require 'react'
 browserHistory = require 'react-router/lib/browserHistory'
-{button, div, input} = react.DOM
+{button, div, h1, input, p} = react.DOM
 MostFrequentWords = react.createFactory require '../metrics/most_frequent_words'
 MessageFrequency = react.createFactory require '../metrics/message_frequency'
 FrequentTopics = react.createFactory require '../metrics/frequent_topics'
@@ -10,6 +10,9 @@ Politics = react.createFactory require '../metrics/politics'
 Conversation = react.createFactory require './conversation'
 Promise = require 'bluebird'
 request = require 'request'
+ModalContainer = react.createFactory (require 'react-modal-dialog' .ModalContainer)
+ModalDialog = react.createFactory (require 'react-modal-dialog' .ModalDialog)
+Spinner = react.createFactory require 'react-spinjs'
 
 apiEndpoint = 'http://localhost:8000/api/'
 analyticsEndpoint = 'http://localhost:8000/api/analytics/'
@@ -28,6 +31,8 @@ class Conversations extends react.Component
       politics: {}
       userId: -1
       apiKey: ''
+      showModal: true
+      loading: false
 
 
   getUserId: (t) ~>
@@ -137,7 +142,7 @@ class Conversations extends react.Component
       else
         metrics[i] =
           politics: JSON.parse body
-      @setState metrics: metrics
+      @setState metrics: metrics, loading: false
 
 
   selectConvo: (i) ~>
@@ -148,6 +153,7 @@ class Conversations extends react.Component
 
 
   analyze: (i) ~>
+    @setState loading: true
     console.log "analyzing convo #{i}"
     options =
       url: apiEndpoint + 'parseMessages/'
@@ -168,6 +174,10 @@ class Conversations extends react.Component
     if k.keyCode is 13 then @sendAuthToken @refs.msgAPIkey.value
 
 
+  handleClose: ~>
+    @setState showModal: false
+
+
   render: ~>
     div className: 'c-conversations',
       div className: 'conversations-tab', style: { borderRight: "#{if @state.selectedConvo != -1 then 'none' else '1px solid #b2b2b2'}" },
@@ -182,6 +192,13 @@ class Conversations extends react.Component
           }
 
       div className: 'analytics-pane',
+        if @state.loading
+          ModalContainer {width: '500px',onClose: ~> @setState showModal: false},
+            Spinner {}
+        if @state.showModal
+          ModalContainer {width: '500px',onClose: ~> @setState showModal: false},
+            ModalDialog {onClose: ~> @setState showModal: false},
+              input placeholder: 'Or manually import your FB message key here', onKeyDown: @parse, ref: 'msgAPIkey'
         if @state.selectedConvo == -1
           div {},
             div className: 'select-a-convo', 'Select a conversation to get started!'
