@@ -139,7 +139,7 @@ class Conversations extends react.Component
 
 
   selectConvo: (i) ~>
-    @analyze i
+    # @analyze i
     @setState selectedConvo: i
     for convo in @state.conversations
       if convo.conversation_id is i
