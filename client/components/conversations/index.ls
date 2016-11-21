@@ -8,9 +8,11 @@ FrequentTopics = react.createFactory require '../metrics/frequent_topics'
 Emotions = react.createFactory require '../metrics/emotions'
 Politics = react.createFactory require '../metrics/politics'
 Conversation = react.createFactory require './conversation'
+Promise = require 'bluebird'
 request = require 'request'
 
-
+apiEndpoint = 'http://localhost:8000/api/'
+analyticsEndpoint = 'http://localhost:8000/api/analytics/'
 class Conversations extends react.Component
 
   ->
@@ -46,7 +48,7 @@ class Conversations extends react.Component
     console.log "sending auth token #{t}"
     options =
       method: 'POST'
-      url: 'http://127.0.0.1:8000/api/parse/'
+      url: "#{apiEndpoint}parse/"
       body: JSON.stringify token: t
       headers:
         "Content-Type": "application/json"
@@ -61,7 +63,7 @@ class Conversations extends react.Component
     if @state.userId is -1
       return
     options =
-      url: "http://127.0.0.1:8000/api/conversations?user_id=#{@state.userId}"
+      url: "#{apiEndpoint}conversations?user_id=#{@state.userId}"
       withCredentials: false
     request options, (err, resp, body) ~>
       conversations = JSON.parse body
@@ -70,7 +72,7 @@ class Conversations extends react.Component
 
   getTopWords: (i) ~>
     options =
-      url: "http://127.0.0.1:8000/api/analytics/top-words?conversation_id=#{i}"
+      url: "#{analyticsEndpoint}top-words?conversation_id=#{i}"
       withCredentials: false
     request options, (err, resp, body) ~>
       metrics = @state.metrics
@@ -84,7 +86,7 @@ class Conversations extends react.Component
 
   getMessageFreq: (i) ~>
     options =
-      url: "http://127.0.0.1:8000/api/analytics/message-count?conversation_id=#{i}&period=month"
+      url: "#{analyticsEndpoint}message-count?conversation_id=#{i}&period=month"
       withCredentials: false
     request options, (err, resp, body) ~>
       metrics = @state.metrics
@@ -98,7 +100,7 @@ class Conversations extends react.Component
 
   getEmotions: (i) ~>
     options =
-      url: "http://127.0.0.1:8000/api/analytics/emotions?conversation_id=#{i}"
+      url: "#{analyticsEndpoint}emotions?conversation_id=#{i}"
       withCredentials: false
     request options, (err, resp, body) ~>
       metrics = @state.metrics
@@ -112,7 +114,7 @@ class Conversations extends react.Component
 
   getTopics: (i) ~>
     options =
-      url: "http://127.0.0.1:8000/api/analytics/topics?conversation_id=#{i}"
+      url: "#{analyticsEndpoint}topics?conversation_id=#{i}"
       withCredentials: false
     request options, (err, resp, body) ~>
       metrics = @state.metrics
@@ -126,7 +128,7 @@ class Conversations extends react.Component
 
   getPolitics: (i) ~>
     options =
-      url: "http://127.0.0.1:8000/api/analytics/political-leanings?conversation_id=#{i}"
+      url: "#{analyticsEndpoint}political-leanings?conversation_id=#{i}"
       withCredentials: false
     request options, (err, resp, body) ~>
       metrics = @state.metrics
@@ -139,7 +141,6 @@ class Conversations extends react.Component
 
 
   selectConvo: (i) ~>
-    # @analyze i
     @setState selectedConvo: i
     for convo in @state.conversations
       if convo.conversation_id is i
@@ -149,7 +150,7 @@ class Conversations extends react.Component
   analyze: (i) ~>
     console.log "analyzing convo #{i}"
     options =
-      url: 'http://127.0.0.1:8000/api/parseMessages/'
+      url: apiEndpoint + 'parseMessages/'
       withCredentials: false
       method: 'POST'
       body: JSON.stringify token: @state.apiKey, conversationId: i
