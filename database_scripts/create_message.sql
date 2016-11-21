@@ -18,7 +18,7 @@ INSERT INTO message VALUES
 ('9', 1, 2, 'hi hi hi hi i miss you hi i love you', now() - interval '2 day'),
 ('10', 1, 1, 'hey, wtf? what the hell? this is awesome!', now() - interval '2 day'),
 ('11', 1, 1, 'thank you you are amazing', now() - interval '2 day'),
-('12', 1, 1, 'nothing is as awesome as you', now() - interval '2 month')
-('10', 2, 1, 'hey, wtf? what the hell? this is awesome!', now() - interval '2 day'),
-('11', 2, 1, 'thank you you are amazing', now() - interval '2 day'),
-('12', 2, 1, 'nothing is as awesome as you', now() - interval '2 month')
+('12', 1, 1, 'nothing is as awesome as you', now() - interval '2 month'),
+('13', 2, 1, 'hey, wtf? what the hell? this is awesome!', now() - interval '2 day'),
+('14', 2, 1, 'thank you you are amazing', now() - interval '2 day'),
+('15', 2, 1, 'nothing is as awesome as you', now() - interval '2 month')
