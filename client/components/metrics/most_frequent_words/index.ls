@@ -14,7 +14,7 @@ class MostFrequentWords extends react.Component
       BarChart {
         className: 'chart'
         data:
-          labels: @props.data.map (wordInfo) -> wordInfo.word
+          labels: @props.data.slice(1,5).map (wordInfo) -> wordInfo.word
           datasets: [
             * label: 'Word Count'
               data: @props.data.map (wordInfo) -> wordInfo.count

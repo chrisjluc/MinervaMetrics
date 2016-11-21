@@ -106,8 +106,6 @@ class Conversations extends react.Component
     request options, (err, resp, body) ->
     setTimeout (~> @getTopWords i), 1000
     setTimeout (~> @getMessageFreq i), 1000
-    # @getTopWords i
-    # @getMessageFreq i
 
 
   parse: (k) ~>
