@@ -91,7 +91,7 @@ apiRouter.get '/conversations/', (req, res) ->
       if err
         return res.status err .json success: false
       res.status 200
-        ..json conversationList
+        ..json conversationList.sort((a, b) -> b.latest_time - a.latest_time)
 
 apiRouter.get '/participants/', (req, res) ->
   conversationDAO.getParticipants req.query.conversation_id, (err, result) ->
