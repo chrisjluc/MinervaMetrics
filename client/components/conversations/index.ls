@@ -1,7 +1,7 @@
 require './index.styl'
 react = require 'react'
 browserHistory = require 'react-router/lib/browserHistory'
-{button, div, h1, input, p} = react.DOM
+{button, div, h1, input} = react.DOM
 MostFrequentWords = react.createFactory require '../metrics/most_frequent_words'
 MessageFrequency = react.createFactory require '../metrics/message_frequency'
 FrequentTopics = react.createFactory require '../metrics/frequent_topics'
@@ -72,7 +72,7 @@ class Conversations extends react.Component
       withCredentials: false
     request options, (err, resp, body) ~>
       conversations = JSON.parse body
-      @setState conversations: conversations
+      @setState conversations: conversations, loading: false
 
 
   getTopWords: (i) ~>
@@ -171,7 +171,9 @@ class Conversations extends react.Component
 
 
   parse: (k) ~>
-    if k.keyCode is 13 then @sendAuthToken @refs.msgAPIkey.value
+    if k.keyCode is 13
+      @setState loading: true, showModal: false
+      @sendAuthToken @refs.msgAPIkey2.value
 
 
   handleClose: ~>
@@ -198,11 +200,39 @@ class Conversations extends react.Component
         if @state.showModal
           ModalContainer {width: '500px',onClose: ~> @setState showModal: false},
             ModalDialog {onClose: ~> @setState showModal: false},
-              input placeholder: 'Or manually import your FB message key here', onKeyDown: @parse, ref: 'msgAPIkey'
+              h1 {
+                style: {
+                  fontFamily: 'sans-serif'
+                  textAlign: 'center'
+                }
+                onClick: -> window.open 'https://developers.facebook.com/tools/explorer/?version=v2.3'
+              }, 'Click here to get your API key!'
+
+              input {
+                placeholder: 'Paste your FB Graph API key'
+                onKeyDown: @parse, ref: 'msgAPIkey2'
+                style: {
+                  backgroundColor: '#f6f7f9'
+                  borderRadius: '3px'
+                  borderStyle: 'none'
+                  fontSize: '14px'
+                  height: '24px'
+                  lineHeight: '24px'
+                  padding: '0 28px'
+                  outline: 'none'
+                  marginTop: '8px'
+                  width: '1000px'
+                  maxWidth: '500px'
+                  boxSizing: 'border-box'
+                  textAlign: 'center'
+                  # &:focus::-webkit-input-placeholder
+                  #   color: transparent
+                }
+              }
         if @state.selectedConvo == -1
           div {},
-            div className: 'select-a-convo', 'Select a conversation to get started!'
-            input placeholder: 'Or manually import your FB message key here', onKeyDown: @parse, ref: 'msgAPIkey'
+            div className: 'select-a-convo', 'Paste your Facebook Graph API key to get started!'
+            button {className: 'insert-key-button', onClick: ~> @setState showModal: true}, 'Input API key'
         else if !@state.metrics[@state.selectedConvo]
           div {},
             div className: 'conversation-title',
