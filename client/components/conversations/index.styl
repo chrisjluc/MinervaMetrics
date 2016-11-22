@@ -34,19 +34,34 @@ $conversations-tab-width = 500px
 
   .conversations-tab
     width: $conversations-tab-width
-    display: inline-block
+    // display: inline-block
     box-sizing: border-box
     position: absolute
     height: calc(100% - 100px)
+    // overflow: scroll
+    border-right: none
+    top: 0px
+    bottom: 0
+    left: 0
+    overflow-y: scroll
+    margin-top: 100px
+    overflow-x: hidden
 
   .analytics-pane
-    display: inline-block
-    width: calc(100% - 400px)
-    vertical-align: top
+    // display: inline-block
+    width: calc(100% - 500px)
+    // vertical-align: top
     padding: 30px
     box-sizing: border-box
     text-align: center
-    margin-left: $conversations-tab-width
+    // margin-left: $conversations-tab-width
+    overflow: scroll
+    position: absolute
+    top: 0
+    bottom: 0
+    right: 0
+    overflow-y: scroll
+    margin-top: 100px
 
     .select-a-convo
       text-align: center
@@ -69,22 +84,6 @@ $conversations-tab-width = 500px
 
       &:focus
         outline: none
-
-    // .refresh-messages
-    //   background: #0084ff
-    //   padding: 0px 30px
-    //   font-size: 25px
-    //   color: #fff
-    //   height: 100px
-    //   border: none
-    //   display: block
-    //   margin: 0 auto
-    //   width: 500px
-    //   border-radius: 10px
-    //   &:focus
-    //     outline: none
-    //   &:hover
-    //     cursor: pointer
 
     .conversation-title
       margin-bottom: 20px
