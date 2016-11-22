@@ -47,6 +47,7 @@
     "pg": "^6.1.0",
     "react-chartjs-2": "^1.4.0",
     "react-facebook-login-component": "^0.6.0",
+    "react-modal-dialog": "^4.0.2",
     "react-spinjs": "^3.0.0",
     "request": "^2.75.0"
   }
