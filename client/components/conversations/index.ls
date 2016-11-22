@@ -150,7 +150,7 @@ class Conversations extends react.Component
     for convo in @state.conversations
       if convo.conversation_id is i
         @setState currentConvo: convo
-    @analyze i
+    @analyze i unless @state.metrics[i]
 
 
   updateMessages: (i) ~>
