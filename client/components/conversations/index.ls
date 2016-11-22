@@ -231,7 +231,7 @@ class Conversations extends react.Component
               }
         if @state.selectedConvo == -1
           div {},
-            div className: 'select-a-convo', 'Paste your Facebook Graph API key to get started!'
+            div className: 'select-a-convo', 'Select a conversation from the left or paste your Facebook Graph API key below to get started!'
             button {className: 'insert-key-button', onClick: ~> @setState showModal: true}, 'Input API key'
         else if !@state.metrics[@state.selectedConvo]
           div {},
