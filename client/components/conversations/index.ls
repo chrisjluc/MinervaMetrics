@@ -150,9 +150,10 @@ class Conversations extends react.Component
     for convo in @state.conversations
       if convo.conversation_id is i
         @setState currentConvo: convo
+    @analyze i
 
 
-  analyze: (i) ~>
+  updateMessages: (i) ~>
     @setState loading: true
     console.log "analyzing convo #{i}"
     options =
@@ -163,6 +164,12 @@ class Conversations extends react.Component
       headers:
         "Content-Type": "application/json"
     request options, (err, resp, body) ->
+    setTimeout (~> @getConversations!), 1000
+    @analyze i
+
+
+  analyze: (i) ~>
+    @setState loading: true
     setTimeout (~> @getTopWords i), 1000
     setTimeout (~> @getMessageFreq i), 1000
     setTimeout (~> @getEmotions i), 1000
@@ -195,10 +202,10 @@ class Conversations extends react.Component
 
       div className: 'analytics-pane',
         if @state.loading
-          ModalContainer {width: '500px',onClose: ~> @setState showModal: false},
+          ModalContainer {onClose: ~> @setState showModal: false},
             Spinner {}
         if @state.showModal
-          ModalContainer {width: '500px',onClose: ~> @setState showModal: false},
+          ModalContainer {onClose: ~> @setState showModal: false},
             ModalDialog {onClose: ~> @setState showModal: false},
               h1 {
                 style: {
@@ -243,7 +250,7 @@ class Conversations extends react.Component
           div {},
             div className: 'conversation-title',
               'Conversation with ' + @state.currentConvo.participants.map (p, i) ~> " #{p.name}"
-            button {className: 'refresh-messages', onClick: ~> @analyze @state.selectedConvo},
+            button {className: 'refresh-messages', onClick: ~> @updateMessages @state.selectedConvo},
               'Refresh Analytics'
             if Object.keys(@state.metrics[@state.selectedConvo].mostFrequentWords).length > 0
               MostFrequentWords data: @state.metrics[@state.selectedConvo].mostFrequentWords
