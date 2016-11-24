@@ -6,7 +6,7 @@ getConversations = (userId, callback) ->
     if err
       done!
       console.error err
-      return callback err null
+      return callback err, null
     client.query(
       'SELECT conversation_id FROM user_conversation WHERE user_id = $1',
       [userId],
@@ -14,7 +14,7 @@ getConversations = (userId, callback) ->
         done!
         if err
           console.error err
-        callback null result.rows
+        callback null, result.rows
     )
 
 getParticipants = (conversationId, callback) ->
@@ -80,9 +80,9 @@ createConversation = (data, callback) ->
       return callback err
     client.query(
       'INSERT INTO conversation(conversation_id, last_updated_time) VALUES($1,$2)' +
-        ' ON CONFLICT(conversation_id) DO' + 
+        ' ON CONFLICT(conversation_id) DO' +
           ' UPDATE SET has_new_messages =' +
-            ' CASE' + 
+            ' CASE' +
               ' WHEN conversation.last_updated_time <> excluded.last_updated_time THEN true' +
               ' ELSE false' +
             ' END' +

@@ -25,7 +25,11 @@ stopWords = new Set ['a' 'about' 'above' 'across' 'after' 'afterwards' 'again' '
 'twenty' 'two' 'un' 'under' 'until' 'up' 'upon' 'us' 'very' 'via' 'was' 'we' 'well' 'were' 'what' 'whatever' 'when'
 'whence' 'whenever' 'where' 'whereafter' 'whereas' 'whereby' 'wherein' 'whereupon' 'wherever' 'whether' 'which'
 'while' 'whither' 'who' 'whoever' 'whole' 'whom' 'whose' 'why' 'will' 'with' 'within' 'without' 'would' 'yet' 'you'
-'your' 'yours' 'yourself' 'yourselves' 'the']
+'your' 'yours' 'yourself' 'yourselves' 'the', 'like', 'yeah', 'just', 'okay', 'think', 'it\'s', 'good', 'want', 'sure',
+'coming', 'right', 'left', 'come', 'need', 'did', 'does', 'maybe', 'don\'t', 'let', 'wait', 'things', 'new', 'nope',
+'i\'m', 'going', 'know', 'didn\'t', 'lot', 'that\'s', 'say', 'doesn\'t', 'yea', 'i\'ll', 'you\'re', 'cause', 'soon',
+'there\'s', 'he\'s', 'she\'s', 'doing', 'can\'t', 'they\'re', 'got', 'im', 'dont', 'having', 'meet', 'told', 'said',
+'oh', 'ya']
 
 removeStopWords = (words) ->
   [word for let word in words when !stopWords.has word]
