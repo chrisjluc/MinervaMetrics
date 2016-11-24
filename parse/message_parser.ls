@@ -2,6 +2,8 @@ messageDAO = require '../daos/message_dao'
 https = require './https'
 options = require './options'
 
+const numThreads = 200
+
 createMessages = (messages) ->
   for message in messages
     messageDAO.saveMessages message, null
@@ -26,8 +28,8 @@ fetchMessages = (messageOption, conversationId, threadCount) ->
 module.exports =
   parseMessages: (authToken, conversationId) ->
     messageOption = options.getMessageOptions authToken, conversationId
-    fetchMessages messageOption, conversationId, 50
+    fetchMessages messageOption, conversationId, numThreads
 
   parseMessagesSince: (authToken, conversationId, lastUpdatedTime) ->
     messageOption = options.getMessageSinceOptions authToken, conversationId, lastUpdatedTime
-    fetchMessages messageOption, conversationId, 50
+    fetchMessages messageOption, conversationId, numThreads
