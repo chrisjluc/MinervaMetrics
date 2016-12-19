@@ -1,91 +1,35 @@
-require! https
 messageDAO = require '../daos/message_dao'
+https = require './https'
+options = require './options'
 
-args = process.argv.slice 2
-accessToken = args[0]
+const numThreads = 200
 
-i = 0
-numberOfConversations = 1
-thread_limit = 5
+createMessages = (messages) ->
+  for message in messages
+    messageDAO.saveMessages message, null
 
-convoID = ""
-
-inboxOption = 
-  host: 'graph.facebook.com'
-  path: '/v2.3/me/inbox?fields=message&limit=' + numberOfConversations + '&access_token=' + accessToken
-  method: 'GET'
-
-convo = []
-participants = []
-
-insertMessageToDatabase = (convo) ->
-  for message in convo
-    messageDAO.postMessages message, null
-
-
-insertParticipantToDatabase = (participants) ->
-  return
-
-httpCall = (callback, options) ->
-  https.get options, (response) ->
-    body = ''
-    response.on 'data', (d) -> 
-      body += d
-    response.on 'end', ->
-      parsed = JSON.parse body
-      if parsed.error
-          console.log parsed.error
-      else
-        callback parsed
-            
-
-getConversations = (parsed) ->
-  for conversation in parsed.data
-    convoID = conversation.id
-
-    messageOptions = 
-      host: 'graph.facebook.com'
-      path: '/v2.3/' + convoID + '/comments?limit=1000&access_token=' + accessToken
-      method: 'GET'
-
-    participantOptions = 
-      host: 'graph.facebook.com'
-      path: '/v2.3/' + convoID + '?fields=to&access_token=' + accessToken
-      method: 'GET'
-
-    httpCall parseParticipants, participantOptions
-    httpCall parseMessages, messageOptions
-
-parseParticipants = (parsed) ->
-  console.log(parsed.to.data.length)
-  for user in parsed.to.data
-    participants.push user
-  console.log participants
-  insertMessageToDatabase(participants)
-
-parseMessages = (parsed) ->
-  console.log(parsed.data.length)
-
-  if parsed.data.length == 0 or i > thread_limit
-    err = true
-    console.log("end")
-    insertMessageToDatabase convo
+fetchMessages = (messageOption, conversationId, threadCount) ->
+  if threadCount <= 0
+    console.log "end"
     return
 
-  for comment in parsed.data
-    sender = comment.from.id
-    message = [
-      comment.id
-      convoID
-      sender
-      comment.message
-      comment.createdTime
-    ]
-    convo.push message
+  https.get messageOption, (err, res) ->
+    if err
+      console.log err
+      return
+    if res.data.length == 0
+      console.log "end"
+      return
 
-  console.log convo.length
-  console.log convo[convo.length - 1]
-  i += 1
-  httpCall parseMessages, parsed.paging.next
+    messages = [[m.id, conversationId, m.from.id, m.message, m.created_time] for m in res.data]
+    createMessages messages
+    fetchMessages res.paging.next, conversationId, (threadCount - 1)
 
-httpCall getConversations, inboxOption
+module.exports =
+  parseMessages: (authToken, conversationId) ->
+    messageOption = options.getMessageOptions authToken, conversationId
+    fetchMessages messageOption, conversationId, numThreads
+
+  parseMessagesSince: (authToken, conversationId, lastUpdatedTime) ->
+    messageOption = options.getMessageSinceOptions authToken, conversationId, lastUpdatedTime
+    fetchMessages messageOption, conversationId, numThreads
